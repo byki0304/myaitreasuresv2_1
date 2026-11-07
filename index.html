@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>나의 AI 총무 · My AI Treasures</title>
+<style>
+:root{
+  --cream:#FBF6EC; --cream-2:#F3EBDA; --paper:#FFFDF8;
+  --teal:#1F5F5B; --teal-d:#143F3C; --teal-l:#D6E7E4;
+  --sage:#9DB592; --sage-l:#E3EBDC;
+  --apricot:#F2A57A; --apricot-l:#FCE5D5;
+  --ink:#1B2F2D; --muted:#4F5E5B; --line:#DCD2BF;
+  --danger:#A8231B; --danger-l:#FCE9E7; --ok:#2E6B3A;
+  --radius:14px; --shadow:0 2px 10px rgba(20,63,60,.08);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;font-size:16px;line-height:1.5;overflow-x:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--apricot);outline-offset:2px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--teal);background:var(--paper);color:var(--teal);font-weight:600;cursor:pointer;text-align:center}
+.btn:hover{background:var(--teal-l)}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-d)}
+.btn-ghost{border-color:var(--line);color:var(--muted);background:transparent}
+.btn-small{min-height:36px;padding:4px 12px;font-size:.9rem}
+.btn-danger{border-color:var(--danger);color:var(--danger)}
+.btn[disabled],.btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+
+/* Logo */
+.logo{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--teal-d);font-weight:800;font-size:1rem;letter-spacing:-.01em}
+.logo svg{width:30px;height:30px;flex:none}
+
+/* Start screen */
+#screen-start{position:relative;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+.start-bg{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.start-top,.start-main,.start-bottom{position:relative;z-index:1}
+.start-top{padding:16px 20px}
+.start-top .logo{background:rgba(255,253,248,.85);padding:6px 12px 6px 8px;border-radius:999px}
+.start-main{flex:1;display:flex;align-items:center;justify-content:center;padding:12px 16px}
+.start-card{max-width:520px;width:100%;background:rgba(255,253,248,.93);border-radius:22px;padding:28px 24px;box-shadow:0 8px 30px rgba(20,63,60,.15);text-align:center}
+.start-eyebrow{margin:0;color:var(--teal);font-weight:700;letter-spacing:.06em;font-size:.85rem}
+.start-card h1{margin:6px 0 10px;font-size:2rem;color:var(--teal-d);line-height:1.2}
+.start-card p{margin:0 0 10px;color:var(--ink)}
+.start-sub{font-size:.92rem;color:var(--muted)!important}
+.start-kept{font-size:.9rem;background:var(--sage-l);color:var(--teal-d)!important;border-radius:10px;padding:6px 10px}
+#btn-start{margin-top:10px;min-width:180px;min-height:52px;font-size:1.1rem}
+.start-bottom{padding:12px 16px 24px;display:flex;justify-content:center}
+.lang-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;background:rgba(255,253,248,.88);padding:6px;border-radius:999px;box-shadow:var(--shadow)}
+.lang-btn{min-height:40px;padding:6px 16px;border-radius:999px;border:1.5px solid var(--teal);background:var(--paper);color:var(--teal);font-weight:600;cursor:pointer}
+.lang-btn[aria-pressed="true"]{background:var(--teal);color:#fff}
+
+/* App shell */
+.app{min-height:100vh}
+.sidebar{background:var(--teal-d);color:#fff}
+.side-logo{display:block;padding:18px 18px 10px}
+.side-logo .logo{color:#fff}
+.side-nav,.side-lang{display:flex;flex-direction:column;gap:8px;padding:10px 14px}
+.side-lang-label{font-size:.8rem;opacity:.8;padding:0 4px}
+.nav-btn{min-height:44px;border-radius:12px;border:1.5px solid rgba(255,255,255,.25);background:transparent;color:#fff;font-weight:600;cursor:pointer;padding:6px 12px;text-align:left}
+.nav-btn:hover:not([disabled]){background:rgba(255,255,255,.1)}
+.nav-btn[aria-current="page"]{background:var(--cream);color:var(--teal-d);border-color:var(--cream)}
+.nav-btn[disabled]{opacity:.45;cursor:not-allowed}
+.sidebar .lang-btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.sidebar .lang-btn[aria-pressed="true"]{background:var(--apricot);color:var(--teal-d);border-color:var(--apricot)}
+.main{min-width:0}
+.topbar{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--cream);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.topbar .logo{flex:none}
+.topbar h1{font-size:1.1rem;margin:0;flex:1;min-width:0;color:var(--teal-d)}
+.home-area{display:flex;align-items:center;gap:8px;margin-left:auto}
+.home-note{font-size:.78rem;color:var(--muted);max-width:180px;text-align:right;line-height:1.3}
+.home-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--teal);background:var(--paper);color:var(--teal);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.home-btn:hover{background:var(--teal-l)}
+.home-btn svg{width:22px;height:22px}
+.content{max-width:900px;margin:0 auto;padding:16px}
+
+@media (min-width:1001px){
+  .app{display:grid;grid-template-columns:240px minmax(0,1fr)}
+  .sidebar{position:sticky;top:0;height:100vh;overflow:auto}
+  .topbar .logo{display:none}
+}
+@media (max-width:1000px){
+  .sidebar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;gap:6px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.15)}
+  .side-logo,.side-lang-label{display:none}
+  .side-nav,.side-lang{display:contents}
+  .nav-btn,.sidebar .lang-btn{text-align:center;min-height:44px;padding:4px 6px;font-size:.88rem;border-radius:12px}
+  .main{padding-bottom:130px}
+}
+@media (max-width:1000px) and (orientation:portrait){
+  .sidebar{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:1000px) and (orientation:landscape){
+  .sidebar{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .main{padding-bottom:76px}
+}
+@media (max-width:520px){
+  .home-note{max-width:110px;font-size:.72rem}
+  .topbar h1{font-size:1rem}
+  .topbar .logo .logo-text{font-size:.85rem}
+}
+@media (max-width:400px){
+  .topbar{gap:6px;padding:10px}
+  .topbar h1{display:none}
+}
+
+/* Cards and forms */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin:0 0 16px;box-shadow:var(--shadow);min-width:0}
+.card h2{margin:0 0 12px;font-size:1.15rem;color:var(--teal-d)}
+.card h3{margin:0;font-size:1rem;color:var(--teal-d)}
+.field{margin:0 0 12px;min-width:0}
+.field label,.field-label{display:block;font-weight:600;margin:0 0 4px;font-size:.95rem}
+.hint{font-size:.85rem;color:var(--muted);margin:4px 0 0}
+input[type=text],input[type=date],select,textarea{width:100%;min-height:44px;padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;min-width:0}
+input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--danger);background:var(--danger-l)}
+.field-error{color:var(--danger);font-size:.88rem;font-weight:600;margin-top:4px}
+.field-error:empty{display:none}
+.grid-2{display:grid;grid-template-columns:1fr;gap:0 16px}
+@media (min-width:700px){.grid-2{grid-template-columns:1fr 1fr}}
+.radio-group{display:flex;gap:8px;flex-wrap:wrap}
+.radio-pill{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 14px;border:1.5px solid var(--line);border-radius:999px;cursor:pointer;background:#fff}
+.radio-pill:has(input:checked){border-color:var(--teal);background:var(--teal-l)}
+.radio-pill input{accent-color:var(--teal);width:18px;height:18px}
+.notice{border-radius:10px;padding:10px 12px;margin:0 0 12px;font-size:.92rem}
+.notice-info{background:var(--sage-l);color:var(--teal-d)}
+.notice-warn{background:var(--apricot-l);color:#6B3412;border:1px solid var(--apricot)}
+.notice-error{background:var(--danger-l);color:var(--danger);border:1px solid var(--danger)}
+#error-summary h2{color:var(--danger);font-size:1rem;margin:0 0 6px}
+#error-summary ul{margin:0;padding-left:20px}
+#error-summary a{color:var(--danger);font-weight:600}
+
+.person-row{margin-bottom:10px}
+.person-input-wrap{display:flex;gap:8px;min-width:0}
+.person-input-wrap input{flex:1}
+.row-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+
+.expense-card{border:1.5px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px;background:#fff;min-width:0}
+.expense-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.amount-wrap{position:relative;display:flex;min-width:0}
+.amount-wrap input{border-top-right-radius:0;border-bottom-right-radius:0;flex:1;min-width:0}
+.tax-btn{flex:none;min-height:44px;max-width:60%;padding:6px 10px;border:1.5px solid var(--teal);border-left:none;border-radius:0 10px 10px 0;background:var(--teal);color:#fff;font-weight:600;cursor:pointer;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tax-btn:hover{background:var(--teal-d)}
+.tax-menu{position:absolute;right:0;top:calc(100% + 4px);z-index:25;min-width:200px;background:#fff;border:1.5px solid var(--teal);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);padding:6px;display:flex;flex-direction:column}
+.tax-item{min-height:42px;text-align:left;padding:8px 12px;border:none;border-radius:8px;background:transparent;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+.tax-item:hover,.tax-item:focus{background:var(--teal-l)}
+.tax-item[aria-checked="true"]{font-weight:700;color:var(--teal-d)}
+.tax-item[aria-checked="true"]::before{content:"✓ "}
+.tax-item small{color:var(--muted)}
+.exp-calc{font-size:.9rem;color:var(--teal-d);background:var(--sage-l);border-radius:8px;padding:6px 10px;margin-top:6px}
+.exp-calc b{font-weight:700}
+fieldset.shares{border:1.5px solid var(--line);border-radius:10px;padding:10px;margin:0;min-width:0}
+fieldset.shares legend{font-weight:600;padding:0 4px;font-size:.95rem}
+.share-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.share-count{font-size:.88rem;color:var(--muted);margin-left:auto}
+.share-list{display:flex;flex-wrap:wrap;gap:8px}
+.share-chip{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:4px 12px;border:1.5px solid var(--line);border-radius:999px;cursor:pointer;background:var(--cream);max-width:100%;overflow-wrap:anywhere}
+.share-chip:has(input:checked){border-color:var(--teal);background:var(--teal-l)}
+.share-chip input{width:18px;height:18px;accent-color:var(--teal)}
+@media (min-width:700px){
+  .expense-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+  .expense-grid .span-2{grid-column:1/-1}
+}
+.summary-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 14px}
+.summary-list div{background:var(--cream);border-radius:10px;padding:8px;text-align:center;min-width:0}
+.summary-list dt{font-size:.8rem;color:var(--muted)}
+.summary-list dd{margin:0;font-weight:700;font-size:1.05rem;overflow-wrap:anywhere}
+#btn-calc{width:100%;min-height:52px;font-size:1.05rem}
+
+/* Result */
+.result-head{background:var(--teal-d);color:#fff;border:none}
+.result-head h2{color:#fff;font-size:1.3rem;margin-bottom:6px;overflow-wrap:anywhere}
+.result-head p{margin:0;opacity:.95}
+.result-expense{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:#fff}
+.result-expense h3{margin-bottom:8px;overflow-wrap:anywhere}
+.kv{display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:4px 12px;margin:0;font-size:.93rem}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.rule-list{margin:8px 0 0;padding-left:20px;font-size:.93rem}
+.rule-list li{margin-bottom:4px;overflow-wrap:anywhere}
+table.people-table{width:100%;border-collapse:collapse;font-size:.93rem}
+.people-table th,.people-table td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;vertical-align:middle}
+.people-table th:first-child,.people-table td:first-child{text-align:left;overflow-wrap:anywhere}
+.people-table th{color:var(--muted);font-weight:600;font-size:.85rem}
+.people-table .send-cell{color:var(--danger);font-weight:700}
+.people-table .recv-cell{color:var(--ok);font-weight:700}
+@media (max-width:640px){
+  .people-table thead{display:none}
+  .people-table,.people-table tbody,.people-table tr,.people-table td{display:block;width:100%}
+  .people-table tr{border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:10px;background:#fff}
+  .people-table td{display:flex;justify-content:space-between;gap:10px;border:none;padding:4px 0;text-align:right}
+  .people-table td::before{content:attr(data-label);color:var(--muted);font-weight:600;text-align:left}
+  .people-table td:first-child{font-weight:700;font-size:1rem}
+  .people-table td.msg-cell{justify-content:flex-end}
+  .people-table td.msg-cell::before{content:none}
+}
+.guide{background:var(--cream);border-radius:12px;padding:12px;margin-top:10px}
+.guide h3{margin:0 0 6px;overflow-wrap:anywhere}
+.guide p{margin:4px 0}
+.guide ul{margin:6px 0 0;padding-left:20px}
+.guide .big{font-size:1.25rem;font-weight:800;color:var(--teal-d)}
+.transfer-list{list-style:none;margin:0;padding:0}
+.transfer-list li{padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fff;font-weight:700;overflow-wrap:anywhere}
+.result-actions{display:flex;flex-wrap:wrap;gap:10px}
+.result-actions .btn{flex:1 1 160px}
+#copy-fallback,#message-text{width:100%;min-height:200px;font-family:inherit;font-size:.9rem;line-height:1.5;resize:vertical;margin-top:8px}
+
+/* Dialogs */
+dialog{border:none;border-radius:18px;padding:0;max-width:min(560px,calc(100vw - 24px));width:100%;background:var(--paper);color:var(--ink);box-shadow:0 20px 50px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(20,40,38,.5)}
+.dialog-body{padding:20px}
+.dialog-body h2{margin:0 0 8px;font-size:1.15rem;color:var(--teal-d);overflow-wrap:anywhere}
+.dialog-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:14px}
+.status{font-size:.9rem;margin-top:8px;font-weight:600}
+.status.ok{color:var(--ok)}
+.status.err{color:var(--danger)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="logo-symbol" viewBox="0 0 40 40">
+      <rect x="1" y="1" width="38" height="38" rx="11" fill="#1F5F5B"/>
+      <rect x="8" y="17" width="24" height="15" rx="3" fill="#FBF6EC"/>
+      <path d="M8 19 Q20 7 32 19 Z" fill="#9DB592"/>
+      <rect x="8" y="18" width="24" height="3" fill="#143F3C"/>
+      <circle cx="20" cy="24.5" r="4.2" fill="#F2A57A"/>
+      <path d="M18 24.6 l1.4 1.4 l2.8 -2.9" stroke="#143F3C" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="home-icon" viewBox="0 0 24 24">
+      <path d="M3 11.5 L12 4 L21 11.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5.5 10 V20 H10 V14.5 H14 V20 H18.5 V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ START SCREEN ============ -->
+<section id="screen-start" aria-labelledby="start-title">
+  <svg class="start-bg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <rect width="1200" height="800" fill="#FBF6EC"/>
+    <circle cx="930" cy="150" r="120" fill="#FCE5D5"/>
+    <circle cx="930" cy="150" r="78" fill="#F7C4A3"/>
+    <path d="M0 250 Q120 200 240 240 T480 230" fill="none" stroke="#E3EBDC" stroke-width="18" stroke-linecap="round"/>
+    <path d="M760 300 Q880 260 1000 300 T1200 290" fill="none" stroke="#E3EBDC" stroke-width="14" stroke-linecap="round"/>
+    <ellipse cx="180" cy="130" rx="90" ry="34" fill="#F3EBDA"/>
+    <ellipse cx="260" cy="110" rx="60" ry="28" fill="#F3EBDA"/>
+    <path d="M0 540 Q300 450 600 520 T1200 500 V800 H0 Z" fill="#E3EBDC"/>
+    <path d="M0 630 Q350 570 700 630 T1200 610 V800 H0 Z" fill="#B9CCAE"/>
+    <path d="M0 720 Q400 680 800 720 T1200 700 V800 H0 Z" fill="#9DB592"/>
+    <!-- leaves -->
+    <g fill="#9DB592" opacity=".8">
+      <ellipse cx="90" cy="520" rx="22" ry="60" transform="rotate(-20 90 520)"/>
+      <ellipse cx="130" cy="530" rx="18" ry="48" transform="rotate(18 130 530)"/>
+      <ellipse cx="1100" cy="500" rx="22" ry="62" transform="rotate(16 1100 500)"/>
+      <ellipse cx="1060" cy="515" rx="18" ry="46" transform="rotate(-22 1060 515)"/>
+    </g>
+    <!-- table -->
+    <ellipse cx="600" cy="640" rx="270" ry="44" fill="#143F3C" opacity=".25"/>
+    <ellipse cx="600" cy="620" rx="260" ry="42" fill="#1F5F5B"/>
+    <rect x="590" y="640" width="20" height="80" fill="#143F3C"/>
+    <!-- people left -->
+    <g>
+      <rect x="400" y="520" width="80" height="110" rx="38" fill="#F2A57A"/>
+      <circle cx="440" cy="490" r="32" fill="#E9C6A6"/>
+      <path d="M408 482 Q440 444 472 482 Q456 466 440 470 Q424 466 408 482Z" fill="#3B2E28"/>
+      <rect x="490" y="540" width="72" height="96" rx="34" fill="#9DB592"/>
+      <circle cx="526" cy="512" r="28" fill="#F1D3B6"/>
+      <path d="M498 506 Q526 470 554 506 Q540 494 526 496 Q512 494 498 506Z" fill="#5A4034"/>
+    </g>
+    <!-- people right -->
+    <g>
+      <rect x="638" y="540" width="72" height="96" rx="34" fill="#1F5F5B"/>
+      <circle cx="674" cy="512" r="28" fill="#EBC8A8"/>
+      <path d="M646 508 Q674 466 702 508 L702 520 Q690 492 674 494 Q658 492 646 520Z" fill="#2B2320"/>
+      <rect x="720" y="520" width="80" height="110" rx="38" fill="#F7C4A3"/>
+      <circle cx="760" cy="490" r="32" fill="#E2B892"/>
+      <path d="M728 486 Q760 446 792 486 Q776 470 760 474 Q744 470 728 486Z" fill="#4A372D"/>
+    </g>
+    <!-- table items -->
+    <g>
+      <rect x="540" y="590" width="70" height="44" rx="4" fill="#FFFDF8" transform="rotate(-6 575 612)"/>
+      <g stroke="#9DB592" stroke-width="3" stroke-linecap="round" transform="rotate(-6 575 612)">
+        <line x1="550" y1="602" x2="598" y2="602"/><line x1="550" y1="612" x2="590" y2="612"/><line x1="550" y1="622" x2="594" y2="622"/>
+      </g>
+      <ellipse cx="660" cy="618" rx="20" ry="7" fill="#C97E52"/>
+      <ellipse cx="660" cy="611" rx="20" ry="7" fill="#F2A57A"/>
+      <ellipse cx="660" cy="604" rx="20" ry="7" fill="#F7C4A3"/>
+      <circle cx="690" cy="610" r="10" fill="#FBF6EC" stroke="#9DB592" stroke-width="3"/>
+    </g>
+    <!-- floating coins & bubbles -->
+    <g font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">
+      <circle cx="470" cy="400" r="26" fill="#F2A57A"/><text x="470" y="409" font-size="26" fill="#FFFDF8">₩</text>
+      <circle cx="735" cy="395" r="26" fill="#9DB592"/><text x="735" y="404" font-size="26" fill="#FFFDF8">¥</text>
+      <path d="M560 360 h80 a14 14 0 0 1 14 14 v28 a14 14 0 0 1 -14 14 h-30 l-12 14 l-4 -14 h-34 a14 14 0 0 1 -14 -14 v-28 a14 14 0 0 1 14 -14z" fill="#FFFDF8" stroke="#1F5F5B" stroke-width="3"/>
+      <path d="M582 388 l12 12 l24 -24" fill="none" stroke="#1F5F5B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g fill="#F2A57A" opacity=".55">
+      <circle cx="330" cy="330" r="8"/><circle cx="880" cy="340" r="10"/><circle cx="380" cy="250" r="5"/><circle cx="830" cy="260" r="6"/>
+    </g>
+  </svg>
+
+  <div class="start-top">
+    <span class="logo" id="start-logo" role="img" aria-label="나의 AI 총무"><svg aria-hidden="true"><use href="#logo-symbol"/></svg><span class="logo-text" data-i18n="appName">나의 AI 총무</span></span>
+  </div>
+  <div class="start-main">
+    <div class="start-card">
+      <p class="start-eyebrow" id="start-eyebrow">My AI Treasures</p>
+      <h1 id="start-title" data-i18n="appName">나의 AI 총무</h1>
+      <p id="start-tagline" data-i18n="startTagline"></p>
+      <p class="start-sub" data-i18n="startSub"></p>
+      <p class="start-kept" id="start-kept" data-i18n="startKept" hidden></p>
+      <button type="button" class="btn btn-primary" id="btn-start" data-i18n="startBtn">시작하기</button>
+    </div>
+  </div>
+  <div class="start-bottom">
+    <div class="lang-pills" role="group" data-i18n-aria="langLabel" aria-label="언어">
+      <button type="button" class="lang-btn" id="lang-ko" data-lang="ko" lang="ko" aria-pressed="true">한국어</button>
+      <button type="button" class="lang-btn" id="lang-en" data-lang="en" lang="en" aria-pressed="false">English</button>
+      <button type="button" class="lang-btn" id="lang-ja" data-lang="ja" lang="ja" aria-pressed="false">日本語</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APP (INPUT / RESULT) ============ -->
+<div class="app" id="app" hidden>
+  <nav class="sidebar" id="sidebar" data-i18n-aria="navAria" aria-label="메뉴">
+    <div class="side-logo"><span class="logo" id="side-logo" role="img" aria-label="나의 AI 총무"><svg aria-hidden="true"><use href="#logo-symbol"/></svg><span class="logo-text" data-i18n="appName">나의 AI 총무</span></span></div>
+    <div class="side-nav">
+      <button type="button" class="nav-btn" id="nav-input" data-i18n="navInput">입력</button>
+      <button type="button" class="nav-btn" id="nav-result" data-i18n="navResult">결과</button>
+      <button type="button" class="nav-btn" id="nav-new" data-i18n="newSettle" data-i18n-title="newSettleTip">새 정산</button>
+    </div>
+    <div class="side-lang" role="group" data-i18n-aria="langLabel" aria-label="언어">
+      <span class="side-lang-label" data-i18n="langLabel">언어</span>
+      <button type="button" class="lang-btn" id="nav-lang-ko" data-lang="ko" lang="ko" aria-pressed="true">한국어</button>
+      <button type="button" class="lang-btn" id="nav-lang-en" data-lang="en" lang="en" aria-pressed="false">English</button>
+      <button type="button" class="lang-btn" id="nav-lang-ja" data-lang="ja" lang="ja" aria-pressed="false">日本語</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <header class="topbar">
+      <span class="logo" id="top-logo" role="img" aria-label="나의 AI 총무"><svg aria-hidden="true"><use href="#logo-symbol"/></svg><span class="logo-text" data-i18n="appName">나의 AI 총무</span></span>
+      <h1 id="page-title"></h1>
+      <div class="home-area">
+        <span class="home-note" id="home-note" data-i18n="homeKeep"></span>
+        <button type="button" class="home-btn" id="btn-home" data-i18n-aria="home" data-i18n-title="homeTip" aria-label="처음으로"><svg aria-hidden="true"><use href="#home-icon"/></svg></button>
+      </div>
+    </header>
+
+    <!-- INPUT SCREEN -->
+    <main class="content" id="screen-input" hidden>
+      <div class="notice notice-warn" id="stale-notice" role="status" data-i18n="staleNotice" hidden></div>
+      <div class="notice notice-error" id="error-summary" tabindex="-1" role="alert" hidden></div>
+
+      <section class="card" aria-labelledby="sec-meeting">
+        <h2 id="sec-meeting" data-i18n="secMeeting"></h2>
+        <div class="grid-2">
+          <div class="field">
+            <label for="meeting-name" data-i18n="meetingName"></label>
+            <input type="text" id="meeting-name" autocomplete="off" data-i18n-ph="meetingNamePh" aria-describedby="hint-meeting-name err-meeting-name">
+            <p class="hint" id="hint-meeting-name" data-i18n="meetingNameHint"></p>
+            <div class="field-error" id="err-meeting-name"></div>
+          </div>
+          <div class="field">
+            <label for="meeting-date" data-i18n="meetingDate"></label>
+            <input type="date" id="meeting-date" min="1900-01-01" max="9999-12-31" aria-describedby="err-meeting-date">
+            <div class="field-error" id="err-meeting-date"></div>
+          </div>
+        </div>
+        <div class="field">
+          <span class="field-label" id="currency-label" data-i18n="currency"></span>
+          <div class="radio-group" role="radiogroup" aria-labelledby="currency-label" aria-describedby="currency-note">
+            <label class="radio-pill"><input type="radio" name="currency" id="currency-krw" value="KRW"><span data-i18n="KRW"></span></label>
+            <label class="radio-pill"><input type="radio" name="currency" id="currency-jpy" value="JPY"><span data-i18n="JPY"></span></label>
+          </div>
+          <p class="hint" id="currency-note" data-i18n="currencyNote"></p>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="sec-people">
+        <h2 id="sec-people" data-i18n="secPeople"></h2>
+        <p class="hint" data-i18n="peopleHint" style="margin:-6px 0 10px"></p>
+        <div id="people-list"></div>
+        <div class="field-error" id="err-people"></div>
+        <div class="notice notice-info" id="people-msg" role="status" hidden></div>
+        <div class="row-actions"><button type="button" class="btn" id="btn-add-person" data-i18n="addPerson"></button></div>
+      </section>
+
+      <section class="card" aria-labelledby="sec-expenses">
+        <h2 id="sec-expenses" data-i18n="secExpenses"></h2>
+        <p class="hint" data-i18n="laterPersonNote" style="margin:-6px 0 10px"></p>
+        <div id="expense-list"></div>
+        <div class="field-error" id="err-expenses"></div>
+        <div class="row-actions"><button type="button" class="btn" id="btn-add-expense" data-i18n="addExpense"></button></div>
+      </section>
+
+      <section class="card" aria-labelledby="sec-summary">
+        <h2 id="sec-summary" data-i18n="secSummary"></h2>
+        <dl class="summary-list">
+          <div><dt data-i18n="sumPeople"></dt><dd id="sum-people"></dd></div>
+          <div><dt data-i18n="sumExpenses"></dt><dd id="sum-expenses"></dd></div>
+          <div><dt data-i18n="sumTotal"></dt><dd id="sum-total"></dd></div>
+        </dl>
+        <div class="field-error" id="err-total"></div>
+        <button type="button" class="btn btn-primary" id="btn-calc" data-i18n="calc"></button>
+      </section>
+    </main>
+
+    <!-- RESULT SCREEN -->
+    <main class="content" id="screen-result" hidden>
+      <section class="card result-head" aria-labelledby="result-heading">
+        <h2 id="result-heading" tabindex="-1"></h2>
+        <p><span data-i18n="date"></span>: <span id="result-date"></span></p>
+        <p><span data-i18n="currency"></span>: <span id="result-currency"></span></p>
+      </section>
+
+      <section class="card" id="sec-r-expenses" aria-labelledby="h-r-expenses">
+        <h2 id="h-r-expenses"></h2>
+        <div id="result-expenses"></div>
+      </section>
+
+      <section class="card" id="sec-r-summary" aria-labelledby="h-r-summary">
+        <h2 id="h-r-summary"></h2>
+        <dl class="kv">
+          <dt data-i18n="totalSpend"></dt><dd id="result-total"></dd>
+          <dt data-i18n="peopleCount"></dt><dd id="result-people-count"></dd>
+        </dl>
+        <h3 style="margin-top:12px" data-i18n="ruleTitle"></h3>
+        <p class="hint" data-i18n="ruleGeneral"></p>
+        <ul class="rule-list" id="result-rules"></ul>
+      </section>
+
+      <section class="card" id="sec-r-people" aria-labelledby="h-r-people">
+        <h2 id="h-r-people"></h2>
+        <table class="people-table" id="people-table">
+          <thead><tr>
+            <th scope="col" data-i18n="name"></th>
+            <th scope="col" data-i18n="paid"></th>
+            <th scope="col" data-i18n="burden"></th>
+            <th scope="col" data-i18n="send"></th>
+            <th scope="col" data-i18n="receive"></th>
+            <th scope="col"><span class="sr-only" data-i18n="message"></span></th>
+          </tr></thead>
+          <tbody id="people-tbody"></tbody>
+        </table>
+      </section>
+
+      <section class="card" id="sec-r-personal" aria-labelledby="h-r-personal">
+        <h2 id="h-r-personal"></h2>
+        <div class="field">
+          <label for="person-select" data-i18n="selectPerson"></label>
+          <select id="person-select"></select>
+        </div>
+        <div class="guide" id="person-guide" aria-live="polite"></div>
+      </section>
+
+      <section class="card" id="sec-r-transfers" aria-labelledby="h-r-transfers">
+        <h2 id="h-r-transfers"></h2>
+        <ul class="transfer-list" id="transfer-list"></ul>
+        <p class="notice notice-info" id="no-transfers" data-i18n="noTransfers" hidden></p>
+      </section>
+
+      <section class="card" aria-label="actions">
+        <div class="result-actions">
+          <button type="button" class="btn" id="btn-edit" data-i18n="edit"></button>
+          <button type="button" class="btn btn-primary" id="btn-copy" data-i18n="copy"></button>
+        </div>
+        <p class="status" id="copy-status" role="status" aria-live="polite"></p>
+        <div id="copy-fallback-wrap" hidden>
+          <label for="copy-fallback" class="field-label" data-i18n="copyFallbackLabel"></label>
+          <textarea id="copy-fallback" readonly></textarea>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- Confirm dialog -->
+<dialog id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-body">
+  <div class="dialog-body">
+    <h2 id="confirm-title" data-i18n="confirmTitle"></h2>
+    <p id="confirm-body" data-i18n="confirmBody"></p>
+    <div class="dialog-actions">
+      <button type="button" class="btn" id="confirm-cancel" data-i18n="cancel"></button>
+      <button type="button" class="btn btn-primary btn-danger" id="confirm-ok" data-i18n="confirmOk" style="background:var(--danger);color:#fff"></button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Message dialog -->
+<dialog id="message-dialog" aria-labelledby="message-title">
+  <div class="dialog-body">
+    <h2 id="message-title"></h2>
+    <p class="hint" data-i18n="msgNote"></p>
+    <label for="message-text" class="sr-only" data-i18n="msgBodyLabel"></label>
+    <textarea id="message-text" readonly></textarea>
+    <p class="status" id="message-status" role="status" aria-live="polite"></p>
+    <div class="dialog-actions">
+      <button type="button" class="btn" id="message-select-all" data-i18n="msgSelectAll"></button>
+      <button type="button" class="btn btn-primary" id="message-copy" data-i18n="msgCopy"></button>
+      <button type="button" class="btn btn-ghost" id="message-close" data-i18n="close"></button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+'use strict';
+
+var STORAGE_KEY = 'myAiTreasures.session.v1';
+var MAX_AMOUNT = 1000000000;
+var TAX_KEYS = ['incl', '10', '5', '1'];
+var TAX_RATE = { incl: 0, '10': 10, '5': 5, '1': 1 };
+
+var I18N = {
+  ko: {
+    appName: '나의 AI 총무',
+    startTagline: '여러 사람이 대신 결제한 모임 비용을 지출별 참여자끼리 공정하게 나누고, 누가 누구에게 얼마를 보내면 되는지 알려 드립니다.',
+    startSub: '로그인·서버 없이 이 페이지에서 바로 계산합니다.',
+    startKept: '이전에 입력한 내용이 그대로 유지되어 있습니다.',
+    startBtn: '시작하기',
+    langLabel: '언어',
+    navAria: '메뉴',
+    home: '처음으로',
+    homeTip: '처음으로 (입력은 유지, 언어는 한국어로 돌아감)',
+    homeKeep: '처음으로 가도 입력은 유지됩니다',
+    navInput: '입력',
+    navResult: '결과',
+    navResultDisabled: '먼저 정산 결과 확인을 눌러 계산하세요',
+    newSettle: '새 정산',
+    newSettleTip: '모든 입력을 지우고 새 정산을 시작',
+    inputTitle: '정산 입력',
+    resultTitle: '정산 결과',
+    secMeeting: '모임 정보',
+    meetingName: '모임 이름 (필수)',
+    meetingNamePh: '예: 친구 모임',
+    meetingNameHint: '1~60자',
+    meetingDate: '모임 날짜 (필수)',
+    currency: '통화',
+    KRW: '원화 (KRW)',
+    JPY: '엔화 (JPY)',
+    currencyNote: '통화를 바꾸면 숫자의 단위만 바뀌며 금액은 환산되지 않습니다.',
+    secPeople: '참여자',
+    personN: '참여자 {n}',
+    personPh: '이름 (1~40자)',
+    peopleHint: '빈 이름과 중복 이름은 쓸 수 없습니다. 동명이인은 민수1, 민수2처럼 구분해 주세요.',
+    addPerson: '+ 참여자 추가',
+    delete: '삭제',
+    deletePersonAria: '{name} 삭제',
+    personIsPayer: '{name}은 지출 「{desc}」의 결제자라서 삭제할 수 없습니다. 결제자를 먼저 변경하거나 해당 지출을 삭제하세요.',
+    newPersonNotice: '새 참여자는 기존 지출에 자동으로 포함되지 않습니다. 필요한 지출에서 부담 참여자로 선택하세요.',
+    secExpenses: '지출',
+    laterPersonNote: '사람을 나중에 추가해도 기존 지출에는 자동 포함되지 않으니 필요한 지출에서 선택하세요.',
+    expenseN: '지출 {n}',
+    desc: '내역',
+    descPh: '예: 식사',
+    amount: '금액 ({unit})',
+    amountShort: '금액',
+    amountPh: '예: 1000',
+    unitKRW: '원',
+    unitJPY: '엔',
+    taxBtnAria: '세금 선택: {label}',
+    taxMenuAria: '세금 선택',
+    tax_incl: '세금기포함',
+    tax_10: '세금10%추가',
+    tax_5: '세금5%추가',
+    tax_1: '세금1%',
+    taxDefault: '기본값',
+    addTax: '추가 세금',
+    finalAmount: '최종 금액',
+    payer: '결제자',
+    payerSelect: '결제자 선택',
+    payerNote: '나눠 결제한 지출은 결제자별로 행을 나눠 입력하세요. 결제자가 부담 참여자에 포함되지 않아도 됩니다.',
+    shares: '부담 참여자',
+    selectAll: '전원 선택',
+    clearAll: '전원 해제',
+    selectedCount: '{n}명 선택',
+    deleteExpense: '지출 삭제',
+    deleteExpenseAria: '{name} 삭제',
+    addExpense: '+ 지출 추가',
+    noPeople: '먼저 참여자를 추가하세요.',
+    secSummary: '입력 요약',
+    sumPeople: '참여 인원',
+    sumExpenses: '지출 수',
+    sumTotal: '총액',
+    calc: '정산 결과 확인',
+    staleNotice: '입력이 변경되어 이전 결과가 무효화되었습니다. 정산 결과 확인을 다시 눌러 계산하세요.',
+    errSummaryTitle: '다음 항목을 수정해 주세요.',
+    locMeeting: '모임 정보',
+    locPeopleSec: '참여자',
+    locExpensesSec: '지출',
+    locSummary: '입력 요약',
+    e_meetingName_empty: '모임 이름을 입력하세요.',
+    e_meetingName_long: '모임 이름은 60자 이하로 입력하세요.',
+    e_date_empty: '모임 날짜를 선택하세요.',
+    e_date_invalid: '유효한 날짜를 선택하세요.',
+    e_people_min: '참여자는 2명 이상이어야 합니다.',
+    e_person_empty: '이름을 입력하세요.',
+    e_person_long: '이름은 40자 이하로 입력하세요.',
+    e_person_dup: '이름이 중복됩니다. 민수1, 민수2처럼 구분하세요.',
+    e_no_expense: '지출을 1개 이상 추가하세요.',
+    e_desc_empty: '내역을 입력하세요.',
+    e_desc_long: '내역은 100자 이하로 입력하세요.',
+    e_amount_empty: '금액을 입력하세요.',
+    e_amount_nan: '금액은 숫자로만 입력하세요.',
+    e_amount_neg: '음수는 입력할 수 없습니다.',
+    e_amount_zero: '0보다 큰 금액을 입력하세요.',
+    e_amount_dec: '소수는 입력할 수 없습니다. 정수로 입력하세요.',
+    e_amount_range: '금액은 1~1,000,000,000 사이의 정수여야 합니다.',
+    e_payer_empty: '결제자를 선택하세요.',
+    e_shares_empty: '이 지출의 부담 참여자를 한 명 이상 선택하세요.',
+    e_total_range: '총지출은 1,000,000,000 이하여야 합니다.',
+    date: '날짜',
+    sec_expenses: '지출 내역',
+    sec_summary: '전체 요약',
+    sec_people: '사람별 요약',
+    sec_personal: '개인별 송금 안내',
+    sec_transfers: '전체 송금 목록',
+    inputAmount: '입력 금액',
+    taxChoice: '세금 선택',
+    baseShare: '기본 부담액',
+    remainderLabel: '나머지 배분',
+    remainderDetail: '나머지 {r} → {names} (1씩 추가)',
+    remainderNone: '나머지 없음',
+    totalSpend: '총지출',
+    peopleCount: '참여 인원',
+    peopleUnit: '{n}명',
+    ruleTitle: '지출별 분담 규칙',
+    ruleGeneral: '각 지출의 최종 금액을 그 지출의 부담 참여자끼리만 균등하게 나눕니다. 나누어떨어지지 않는 나머지는 등록 순서대로 앞사람부터 1씩 더 부담합니다. 전체 인원으로 일괄 나누지 않습니다.',
+    ruleLine: '{desc}: {final} ÷ {n} = 1인 {base}, {rem}',
+    name: '이름',
+    paid: '선결제액',
+    burden: '최종 부담액',
+    send: '보낼 금액',
+    receive: '받을 금액',
+    message: '메시지 작성',
+    messageAria: '{name}에게 보낼 메시지 작성',
+    selectPerson: '사람 선택',
+    pg_title: '{name}이 송금해야 할 금액',
+    pg_total: '송금 합계',
+    pg_to: '{name}에게',
+    pg_noSend: '송금할 금액 없음',
+    pg_receive: '받을 금액',
+    pg_from: '{name}으로부터',
+    pg_even: '부담액과 선결제액이 같아 추가 송금·수취가 없습니다.',
+    noTransfers: '추가 송금이 필요 없습니다.',
+    edit: '입력 수정',
+    copy: '정산 안내 복사',
+    copied: '정산 안내를 클립보드에 복사했습니다. 메모장이나 메신저에 붙여 넣으세요.',
+    copyFail: '자동 복사에 실패했습니다. 아래 상자의 내용을 직접 선택해 복사하세요.',
+    copyFallbackLabel: '정산 안내 (직접 선택해 복사하세요)',
+    confirmTitle: '새 정산을 시작할까요?',
+    confirmBody: '현재 입력과 결과가 모두 삭제됩니다. 선택한 언어와 통화는 유지됩니다.',
+    confirmOk: '삭제하고 새로 시작',
+    cancel: '취소',
+    msgTitle: '{name}에게 보낼 메시지',
+    msgBodyLabel: '메시지 본문',
+    msgCopy: '메시지 복사',
+    msgSelectAll: '전체 선택',
+    close: '닫기',
+    msgCopied: '메시지를 복사했습니다. 문자·메신저 앱에 붙여 넣으세요.',
+    msgCopyFail: '자동 복사에 실패했습니다. 본문을 선택했으니 Ctrl+C(⌘+C) 또는 길게 눌러 직접 복사하세요.',
+    msgSelected: '본문 전체를 선택했습니다.',
+    msgNote: '실제 문자 발송은 사용하는 문자·메신저 앱에서 직접 하세요.',
+    msgTo: '받는 사람: {name}',
+    txtHeader: '[나의 AI 총무] 정산 안내',
+    txtMeeting: '모임',
+    txtPersonal: '{name} 개인 정산',
+    msgNoExtra: '추가 송금·수취 없음',
+    honor: '{name}님',
+    fmtKRW: '{n}원',
+    fmtJPY: '{n}엔'
+  },
+  en: {
+    appName: 'My AI Treasures',
+    startTagline: 'Split group costs that different people paid, fairly among the people who joined each expense, and see exactly who should send how much to whom.',
+    startSub: 'Calculated right here on this page — no login or server.',
+    startKept: 'Your previous inputs are still kept.',
+    startBtn: 'Get started',
+    langLabel: 'Language',
+    navAria: 'Menu',
+    home: 'Home',
+    homeTip: 'Home (inputs are kept; language returns to Korean)',
+    homeKeep: 'Inputs are kept when you go home',
+    navInput: 'Input',
+    navResult: 'Result',
+    navResultDisabled: 'Press "Show settlement" first',
+    newSettle: 'New settlement',
+    newSettleTip: 'Clear all inputs and start a new settlement',
+    inputTitle: 'Settlement input',
+    resultTitle: 'Settlement result',
+    secMeeting: 'Meeting info',
+    meetingName: 'Meeting name (required)',
+    meetingNamePh: 'e.g. Friends gathering',
+    meetingNameHint: '1–60 characters',
+    meetingDate: 'Meeting date (required)',
+    currency: 'Currency',
+    KRW: 'Korean won (KRW)',
+    JPY: 'Japanese yen (JPY)',
+    currencyNote: 'Changing the currency only changes the unit; amounts are not converted.',
+    secPeople: 'Participants',
+    personN: 'Participant {n}',
+    personPh: 'Name (1–40 chars)',
+    peopleHint: 'Names must not be empty or duplicated. Distinguish people with the same name, e.g. Minsu1, Minsu2.',
+    addPerson: '+ Add participant',
+    delete: 'Delete',
+    deletePersonAria: 'Delete {name}',
+    personIsPayer: '{name} is the payer of expense "{desc}" and cannot be deleted. Change the payer or delete that expense first.',
+    newPersonNotice: 'New participants are not added to existing expenses automatically. Select them in the expenses where needed.',
+    secExpenses: 'Expenses',
+    laterPersonNote: 'People added later are not included in existing expenses automatically; select them where needed.',
+    expenseN: 'Expense {n}',
+    desc: 'Description',
+    descPh: 'e.g. Dinner',
+    amount: 'Amount ({unit})',
+    amountShort: 'Amount',
+    amountPh: 'e.g. 1000',
+    unitKRW: 'won',
+    unitJPY: 'yen',
+    taxBtnAria: 'Tax option: {label}',
+    taxMenuAria: 'Tax option',
+    tax_incl: 'Tax included',
+    tax_10: 'Add 10% tax',
+    tax_5: 'Add 5% tax',
+    tax_1: 'Tax 1% (added)',
+    taxDefault: 'default',
+    addTax: 'Added tax',
+    finalAmount: 'Final amount',
+    payer: 'Paid by',
+    payerSelect: 'Select payer',
+    payerNote: 'If an expense was paid by several people, enter one row per payer. The payer does not have to share the expense.',
+    shares: 'Shared by',
+    selectAll: 'Select all',
+    clearAll: 'Clear all',
+    selectedCount: '{n} selected',
+    deleteExpense: 'Delete expense',
+    deleteExpenseAria: 'Delete {name}',
+    addExpense: '+ Add expense',
+    noPeople: 'Add participants first.',
+    secSummary: 'Input summary',
+    sumPeople: 'Participants',
+    sumExpenses: 'Expenses',
+    sumTotal: 'Total',
+    calc: 'Show settlement',
+    staleNotice: 'Inputs changed, so the previous result is no longer valid. Press "Show settlement" again to recalculate.',
+    errSummaryTitle: 'Please fix the following.',
+    locMeeting: 'Meeting info',
+    locPeopleSec: 'Participants',
+    locExpensesSec: 'Expenses',
+    locSummary: 'Input summary',
+    e_meetingName_empty: 'Enter a meeting name.',
+    e_meetingName_long: 'Meeting name must be 60 characters or fewer.',
+    e_date_empty: 'Select a meeting date.',
+    e_date_invalid: 'Select a valid date.',
+    e_people_min: 'At least 2 participants are required.',
+    e_person_empty: 'Enter a name.',
+    e_person_long: 'Name must be 40 characters or fewer.',
+    e_person_dup: 'Duplicate name. Distinguish them, e.g. Minsu1, Minsu2.',
+    e_no_expense: 'Add at least one expense.',
+    e_desc_empty: 'Enter a description.',
+    e_desc_long: 'Description must be 100 characters or fewer.',
+    e_amount_empty: 'Enter an amount.',
+    e_amount_nan: 'Enter numbers only.',
+    e_amount_neg: 'Negative amounts are not allowed.',
+    e_amount_zero: 'Enter an amount greater than 0.',
+    e_amount_dec: 'Decimals are not allowed. Enter a whole number.',
+    e_amount_range: 'Amount must be a whole number from 1 to 1,000,000,000.',
+    e_payer_empty: 'Select a payer.',
+    e_shares_empty: 'Select at least one person to share this expense.',
+    e_total_range: 'Total spending must be 1,000,000,000 or less.',
+    date: 'Date',
+    sec_expenses: 'Expense details',
+    sec_summary: 'Overall summary',
+    sec_people: 'Summary by person',
+    sec_personal: 'Personal transfer guide',
+    sec_transfers: 'All transfers',
+    inputAmount: 'Entered amount',
+    taxChoice: 'Tax option',
+    baseShare: 'Base share',
+    remainderLabel: 'Remainder',
+    remainderDetail: 'Remainder {r} → {names} (+1 each)',
+    remainderNone: 'No remainder',
+    totalSpend: 'Total spending',
+    peopleCount: 'Participants',
+    peopleUnit: '{n} people',
+    ruleTitle: 'Split rule per expense',
+    ruleGeneral: 'Each expense\'s final amount is split equally only among the people sharing that expense. Any remainder is added 1 at a time to people in registration order. The total is never divided by all participants at once.',
+    ruleLine: '{desc}: {final} ÷ {n} = {base} each, {rem}',
+    name: 'Name',
+    paid: 'Paid upfront',
+    burden: 'Final share',
+    send: 'To send',
+    receive: 'To receive',
+    message: 'Write message',
+    messageAria: 'Write a message to {name}',
+    selectPerson: 'Select a person',
+    pg_title: 'Amount {name} needs to send',
+    pg_total: 'Total to send',
+    pg_to: 'to {name}',
+    pg_noSend: 'Nothing to send',
+    pg_receive: 'To receive',
+    pg_from: 'from {name}',
+    pg_even: 'Share equals amount paid, so nothing to send or receive.',
+    noTransfers: 'No additional transfers are needed.',
+    edit: 'Edit inputs',
+    copy: 'Copy settlement guide',
+    copied: 'Settlement guide copied to the clipboard. Paste it into a note or messenger.',
+    copyFail: 'Automatic copy failed. Select the text in the box below and copy it manually.',
+    copyFallbackLabel: 'Settlement guide (select and copy manually)',
+    confirmTitle: 'Start a new settlement?',
+    confirmBody: 'All current inputs and results will be deleted. The selected language and currency are kept.',
+    confirmOk: 'Delete and start new',
+    cancel: 'Cancel',
+    msgTitle: 'Message to {name}',
+    msgBodyLabel: 'Message text',
+    msgCopy: 'Copy message',
+    msgSelectAll: 'Select all',
+    close: 'Close',
+    msgCopied: 'Message copied. Paste it into your messaging app.',
+    msgCopyFail: 'Automatic copy failed. The text is selected — press Ctrl+C (⌘+C) or long-press to copy.',
+    msgSelected: 'All text selected.',
+    msgNote: 'Send the actual message yourself from your messaging app.',
+    msgTo: 'To: {name}',
+    txtHeader: '[My AI Treasures] Settlement guide',
+    txtMeeting: 'Meeting',
+    txtPersonal: 'Personal settlement for {name}',
+    msgNoExtra: 'No additional transfer to send or receive',
+    honor: '{name}',
+    fmtKRW: '{n} won',
+    fmtJPY: '{n} yen'
+  },
+  ja: {
+    appName: 'マイAI総務',
+    startTagline: '複数の人が立て替えた集まりの費用を、支出ごとの参加者で公平に分け、誰が誰にいくら送金すればよいかをご案内します。',
+    startSub: 'ログインやサーバーなしで、このページですぐに計算します。',
+    startKept: '以前の入力内容はそのまま保持されています。',
+    startBtn: 'はじめる',
+    langLabel: '言語',
+    navAria: 'メニュー',
+    home: 'ホームへ',
+    homeTip: 'ホームへ（入力は保持、言語は韓国語に戻ります）',
+    homeKeep: 'ホームに戻っても入力は保持されます',
+    navInput: '入力',
+    navResult: '結果',
+    navResultDisabled: '先に「精算結果を確認」を押してください',
+    newSettle: '新しい精算',
+    newSettleTip: 'すべての入力を消して新しい精算を始める',
+    inputTitle: '精算の入力',
+    resultTitle: '精算結果',
+    secMeeting: '集まりの情報',
+    meetingName: '集まりの名前（必須）',
+    meetingNamePh: '例：友だちの集まり',
+    meetingNameHint: '1〜60文字',
+    meetingDate: '集まりの日付（必須）',
+    currency: '通貨',
+    KRW: '韓国ウォン (KRW)',
+    JPY: '日本円 (JPY)',
+    currencyNote: '通貨を変えても数字の単位が変わるだけで、金額は換算されません。',
+    secPeople: '参加者',
+    personN: '参加者 {n}',
+    personPh: '名前（1〜40文字）',
+    peopleHint: '空の名前や重複した名前は使えません。同姓同名は ミンス1、ミンス2 のように区別してください。',
+    addPerson: '+ 参加者を追加',
+    delete: '削除',
+    deletePersonAria: '{name}を削除',
+    personIsPayer: '{name}は支出「{desc}」の支払者のため削除できません。先に支払者を変更するか、その支出を削除してください。',
+    newPersonNotice: '新しい参加者は既存の支出に自動では含まれません。必要な支出で負担者として選択してください。',
+    secExpenses: '支出',
+    laterPersonNote: '後から追加した人は既存の支出に自動では含まれないため、必要な支出で選択してください。',
+    expenseN: '支出 {n}',
+    desc: '内容',
+    descPh: '例：食事',
+    amount: '金額（{unit}）',
+    amountShort: '金額',
+    amountPh: '例：1000',
+    unitKRW: 'ウォン',
+    unitJPY: '円',
+    taxBtnAria: '税の選択：{label}',
+    taxMenuAria: '税の選択',
+    tax_incl: '税込',
+    tax_10: '税10%加算',
+    tax_5: '税5%加算',
+    tax_1: '税1%（加算）',
+    taxDefault: '初期値',
+    addTax: '追加の税',
+    finalAmount: '最終金額',
+    payer: '支払者',
+    payerSelect: '支払者を選択',
+    payerNote: '複数人で分けて支払った支出は、支払者ごとに行を分けて入力してください。支払者が負担者に含まれていなくても構いません。',
+    shares: '負担する参加者',
+    selectAll: '全員選択',
+    clearAll: '全員解除',
+    selectedCount: '{n}人選択',
+    deleteExpense: '支出を削除',
+    deleteExpenseAria: '{name}を削除',
+    addExpense: '+ 支出を追加',
+    noPeople: '先に参加者を追加してください。',
+    secSummary: '入力のまとめ',
+    sumPeople: '参加人数',
+    sumExpenses: '支出数',
+    sumTotal: '合計',
+    calc: '精算結果を確認',
+    staleNotice: '入力が変更されたため、以前の結果は無効になりました。もう一度「精算結果を確認」を押して計算してください。',
+    errSummaryTitle: '次の項目を修正してください。',
+    locMeeting: '集まりの情報',
+    locPeopleSec: '参加者',
+    locExpensesSec: '支出',
+    locSummary: '入力のまとめ',
+    e_meetingName_empty: '集まりの名前を入力してください。',
+    e_meetingName_long: '集まりの名前は60文字以内で入力してください。',
+    e_date_empty: '集まりの日付を選択してください。',
+    e_date_invalid: '有効な日付を選択してください。',
+    e_people_min: '参加者は2人以上必要です。',
+    e_person_empty: '名前を入力してください。',
+    e_person_long: '名前は40文字以内で入力してください。',
+    e_person_dup: '名前が重複しています。ミンス1、ミンス2 のように区別してください。',
+    e_no_expense: '支出を1件以上追加してください。',
+    e_desc_empty: '内容を入力してください。',
+    e_desc_long: '内容は100文字以内で入力してください。',
+    e_amount_empty: '金額を入力してください。',
+    e_amount_nan: '金額は数字のみで入力してください。',
+    e_amount_neg: 'マイナスの金額は入力できません。',
+    e_amount_zero: '0より大きい金額を入力してください。',
+    e_amount_dec: '小数は入力できません。整数で入力してください。',
+    e_amount_range: '金額は1〜1,000,000,000の整数で入力してください。',
+    e_payer_empty: '支払者を選択してください。',
+    e_shares_empty: 'この支出の負担者を1人以上選択してください。',
+    e_total_range: '支出の合計は1,000,000,000以下にしてください。',
+    date: '日付',
+    sec_expenses: '支出の内訳',
+    sec_summary: '全体のまとめ',
+    sec_people: '人別のまとめ',
+    sec_personal: '個人別の送金案内',
+    sec_transfers: '送金一覧',
+    inputAmount: '入力金額',
+    taxChoice: '税の選択',
+    baseShare: '基本負担額',
+    remainderLabel: '端数の配分',
+    remainderDetail: '端数 {r} → {names}（1ずつ追加）',
+    remainderNone: '端数なし',
+    totalSpend: '支出合計',
+    peopleCount: '参加人数',
+    peopleUnit: '{n}人',
+    ruleTitle: '支出ごとの分担ルール',
+    ruleGeneral: '各支出の最終金額を、その支出の負担者だけで均等に分けます。割り切れない端数は登録順に前の人から1ずつ多く負担します。全員で一括して割ることはしません。',
+    ruleLine: '{desc}：{final} ÷ {n} = 1人 {base}、{rem}',
+    name: '名前',
+    paid: '立替額',
+    burden: '最終負担額',
+    send: '送る金額',
+    receive: '受け取る金額',
+    message: 'メッセージ作成',
+    messageAria: '{name}へのメッセージを作成',
+    selectPerson: '人を選択',
+    pg_title: '{name}が送金する金額',
+    pg_total: '送金合計',
+    pg_to: '{name}へ',
+    pg_noSend: '送金する金額なし',
+    pg_receive: '受け取る金額',
+    pg_from: '{name}から',
+    pg_even: '負担額と立替額が同じため、追加の送金・受け取りはありません。',
+    noTransfers: '追加の送金は必要ありません。',
+    edit: '入力を修正',
+    copy: '精算案内をコピー',
+    copied: '精算案内をクリップボードにコピーしました。メモやメッセンジャーに貼り付けてください。',
+    copyFail: '自動コピーに失敗しました。下の欄の内容を選択して手動でコピーしてください。',
+    copyFallbackLabel: '精算案内（選択して手動でコピーしてください）',
+    confirmTitle: '新しい精算を始めますか？',
+    confirmBody: '現在の入力と結果はすべて削除されます。選択した言語と通貨は保持されます。',
+    confirmOk: '削除して新しく始める',
+    cancel: 'キャンセル',
+    msgTitle: '{name}へのメッセージ',
+    msgBodyLabel: 'メッセージ本文',
+    msgCopy: 'メッセージをコピー',
+    msgSelectAll: 'すべて選択',
+    close: '閉じる',
+    msgCopied: 'メッセージをコピーしました。メッセージアプリに貼り付けてください。',
+    msgCopyFail: '自動コピーに失敗しました。本文を選択したので Ctrl+C（⌘+C）または長押しでコピーしてください。',
+    msgSelected: '本文をすべて選択しました。',
+    msgNote: '実際の送信はお使いのメッセージアプリから行ってください。',
+    msgTo: '宛先：{name}',
+    txtHeader: '[マイAI総務] 精算案内',
+    txtMeeting: '集まり',
+    txtPersonal: '{name}の個人精算',
+    msgNoExtra: '追加の送金・受け取りなし',
+    honor: '{name}さん',
+    fmtKRW: '{n}ウォン',
+    fmtJPY: '{n}円'
+  }
+};
+
+/* ---------- utilities ---------- */
+function $(s, r) { return (r || document).querySelector(s); }
+function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function todayStr() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function charLen(s) { return Array.from(s).length; }
+function num(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+function t(key, p) {
+  var dict = I18N[state.lang] || I18N.ko;
+  var s = dict[key];
+  if (s == null) s = I18N.ko[key];
+  if (s == null) return key;
+  if (p) s = s.replace(/\{(\w+)\}/g, function (m, k) { return p[k] != null ? p[k] : m; });
+  return s;
+}
+function money(n) { return t(state.currency === 'JPY' ? 'fmtJPY' : 'fmtKRW', { n: num(n) }); }
+function unit() { return t(state.currency === 'JPY' ? 'unitJPY' : 'unitKRW'); }
+function honor(name) { return t('honor', { name: name }); }
+
+/* ---------- state ---------- */
+function mkPerson(s) { s.seq += 1; return { id: 'p' + s.seq, name: '' }; }
+function mkExpense(s) {
+  s.seq += 1;
+  return { id: 'e' + s.seq, desc: '', amount: '', tax: 'incl', payer: '', shares: s.people.map(function (p) { return p.id; }) };
+}
+function defaultState(lang, currency) {
+  var s = {
+    lang: lang || 'ko', screen: 'start', currency: currency || 'KRW',
+    meeting: { name: '', date: todayStr() },
+    people: [], expenses: [], seq: 0,
+    hasResult: false, stale: false, showErrors: false, selectedPerson: null
+  };
+  s.people.push(mkPerson(s), mkPerson(s));
+  s.expenses.push(mkExpense(s));
+  return s;
+}
+
+var memoryStore = null;
+function save() {
+  var data = JSON.stringify(state);
+  try { sessionStorage.setItem(STORAGE_KEY, data); } catch (e) { memoryStore = data; }
+}
+function load() {
+  var raw = null;
+  try { raw = sessionStorage.getItem(STORAGE_KEY); } catch (e) { raw = memoryStore; }
+  if (!raw) return null;
+  try {
+    var s = JSON.parse(raw);
+    if (!s || !Array.isArray(s.people) || !Array.isArray(s.expenses) || !s.meeting) return null;
+    if (!I18N[s.lang]) s.lang = 'ko';
+    if (s.currency !== 'KRW' && s.currency !== 'JPY') s.currency = 'KRW';
+    if (['start', 'input', 'result'].indexOf(s.screen) < 0) s.screen = 'start';
+    s.meeting.name = String(s.meeting.name || '');
+    s.meeting.date = String(s.meeting.date || '');
+    s.people = s.people.filter(function (p) { return p && /^p\d+$/.test(p.id); }).map(function (p) { return { id: p.id, name: String(p.name || '') }; });
+    s.expenses = s.expenses.filter(function (e) { return e && /^e\d+$/.test(e.id); }).map(function (e) {
+      return {
+        id: e.id, desc: String(e.desc || ''), amount: String(e.amount == null ? '' : e.amount),
+        tax: TAX_KEYS.indexOf(e.tax) >= 0 ? e.tax : 'incl', payer: String(e.payer || ''),
+        shares: Array.isArray(e.shares) ? e.shares.map(String) : []
+      };
+    });
+    var maxSeq = 0;
+    s.people.concat(s.expenses).forEach(function (x) { maxSeq = Math.max(maxSeq, parseInt(x.id.slice(1), 10) || 0); });
+    s.seq = Math.max(Number(s.seq) || 0, maxSeq);
+    s.hasResult = !!s.hasResult; s.stale = !!s.stale; s.showErrors = !!s.showErrors;
+    return s;
+  } catch (e) { return null; }
+}
+
+var state = load() || defaultState('ko', 'KRW');
+var result = null;
+var msgPerson = null;
+var copyFallbackShown = false;
+
+/* ---------- calculation ---------- */
+function parseAmount(raw) {
+  var s = String(raw == null ? '' : raw)
+    .replace(/[\uFF10-\uFF19]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+    .replace(/[\uFF0C]/g, ',').replace(/[\uFF0E]/g, '.').replace(/[\uFF0D\u2212]/g, '-')
+    .trim();
+  if (s === '') return { ok: false, err: 'empty' };
+  s = s.replace(/,/g, '');
+  if (/^-\s*\d+(\.\d+)?$/.test(s)) return { ok: false, err: Number(s.replace(/\s/g, '')) === 0 ? 'zero' : 'neg' };
+  if (/^\d*\.\d+$/.test(s) || /^\d+\.$/.test(s)) return { ok: false, err: 'dec' };
+  if (!/^\d+$/.test(s)) return { ok: false, err: 'nan' };
+  var v = Number(s);
+  if (v === 0) return { ok: false, err: 'zero' };
+  if (v > MAX_AMOUNT) return { ok: false, err: 'range' };
+  return { ok: true, value: v };
+}
+function taxOf(amount, taxKey) {
+  var rate = TAX_RATE[taxKey] || 0;
+  return Math.floor((amount * rate + 50) / 100);
+}
+function isValidDate(s) {
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return false;
+  var y = +m[1], mo = +m[2], d = +m[3];
+  if (y < 1900 || mo < 1 || mo > 12 || d < 1) return false;
+  var dt = new Date(y, mo - 1, d);
+  return dt.getFullYear() === y && dt.getMonth() === mo - 1 && dt.getDate() === d;
+}
+function personIds() { return state.people.map(function (p) { return p.id; }); }
+function validShares(e) {
+  var ids = personIds();
+  return ids.filter(function (id) { return e.shares.indexOf(id) >= 0; });
+}
+function personLabel(p, i) { return p.name.trim() || t('personN', { n: i + 1 }); }
+function expenseLabel(e, i) { return e.desc.trim() || t('expenseN', { n: i + 1 }); }
+
+function validate() {
+  var errs = [];
+  function add(field, errEl, loc, key) { errs.push({ field: field, errEl: errEl, loc: loc, key: key }); }
+  var mn = state.meeting.name.trim();
+  if (!mn) add('meeting-name', 'err-meeting-name', t('locMeeting') + ' · ' + t('meetingName'), 'e_meetingName_empty');
+  else if (charLen(mn) > 60) add('meeting-name', 'err-meeting-name', t('locMeeting') + ' · ' + t('meetingName'), 'e_meetingName_long');
+  var d = state.meeting.date;
+  var dateEl = document.getElementById('meeting-date');
+  var badInput = dateEl && dateEl.validity && dateEl.validity.badInput;
+  if (!d) add('meeting-date', 'err-meeting-date', t('locMeeting') + ' · ' + t('meetingDate'), badInput ? 'e_date_invalid' : 'e_date_empty');
+  else if (!isValidDate(d)) add('meeting-date', 'err-meeting-date', t('locMeeting') + ' · ' + t('meetingDate'), 'e_date_invalid');
+
+  if (state.people.length < 2) add('btn-add-person', 'err-people', t('locPeopleSec'), 'e_people_min');
+  var counts = {};
+  state.people.forEach(function (p) { var n = p.name.trim(); if (n) counts[n] = (counts[n] || 0) + 1; });
+  state.people.forEach(function (p, i) {
+    var n = p.name.trim(), loc = t('personN', { n: i + 1 });
+    if (!n) add('person-' + p.id, 'err-person-' + p.id, loc, 'e_person_empty');
+    else if (charLen(n) > 40) add('person-' + p.id, 'err-person-' + p.id, loc, 'e_person_long');
+    else if (counts[n] > 1) add('person-' + p.id, 'err-person-' + p.id, loc, 'e_person_dup');
+  });
+
+  if (!state.expenses.length) add('btn-add-expense', 'err-expenses', t('locExpensesSec'), 'e_no_expense');
+  var total = 0, firstAmount = null;
+  var ids = personIds();
+  state.expenses.forEach(function (e, i) {
+    var base = t('expenseN', { n: i + 1 }) + ' · ';
+    var pre = 'exp-' + e.id + '-';
+    if (!firstAmount) firstAmount = pre + 'amount';
+    var ds = e.desc.trim();
+    if (!ds) add(pre + 'desc', 'err-' + pre + 'desc', base + t('desc'), 'e_desc_empty');
+    else if (charLen(ds) > 100) add(pre + 'desc', 'err-' + pre + 'desc', base + t('desc'), 'e_desc_long');
+    var a = parseAmount(e.amount);
+    if (!a.ok) add(pre + 'amount', 'err-' + pre + 'amount', base + t('amountShort'), 'e_amount_' + a.err);
+    else total += a.value + taxOf(a.value, e.tax);
+    if (!e.payer || ids.indexOf(e.payer) < 0) add(pre + 'payer', 'err-' + pre + 'payer', base + t('payer'), 'e_payer_empty');
+    if (validShares(e).length === 0) add('shares:' + e.id, 'err-' + pre + 'shares', base + t('shares'), 'e_shares_empty');
+  });
+  if (total > MAX_AMOUNT) add(firstAmount || 'btn-calc', 'err-total', t('locSummary') + ' · ' + t('sumTotal'), 'e_total_range');
+  return errs;
+}
+
+function compute() {
+  var people = state.people.map(function (p) {
+    return { id: p.id, name: p.name.trim(), paid: 0, burden: 0, send: 0, receive: 0, outgoing: [], incoming: [] };
+  });
+  var byId = {};
+  people.forEach(function (p) { byId[p.id] = p; });
+  var total = 0;
+  var expenses = state.expenses.map(function (e) {
+    var amount = parseAmount(e.amount).value;
+    var add = taxOf(amount, e.tax);
+    var fin = amount + add;
+    var shareIds = validShares(e);
+    var n = shareIds.length;
+    var base = Math.floor(fin / n), rem = fin % n;
+    var remIds = shareIds.slice(0, rem);
+    shareIds.forEach(function (id, idx) { byId[id].burden += base + (idx < rem ? 1 : 0); });
+    byId[e.payer].paid += fin;
+    total += fin;
+    return {
+      id: e.id, desc: e.desc.trim(), payerName: byId[e.payer].name, amount: amount, tax: e.tax, add: add, final: fin,
+      shareNames: shareIds.map(function (id) { return byId[id].name; }), n: n, base: base, rem: rem,
+      remNames: remIds.map(function (id) { return byId[id].name; })
+    };
+  });
+  var senders = [], receivers = [];
+  people.forEach(function (p) {
+    var bal = p.burden - p.paid;
+    if (bal > 0) { p.send = bal; senders.push({ p: p, r: bal }); }
+    else if (bal < 0) { p.receive = -bal; receivers.push({ p: p, r: -bal }); }
+  });
+  var transfers = [];
+  var i = 0, j = 0;
+  while (i < senders.length && j < receivers.length) {
+    var amt = Math.min(senders[i].r, receivers[j].r);
+    if (amt > 0) {
+      transfers.push({ from: senders[i].p.name, to: receivers[j].p.name, amount: amt });
+      senders[i].p.outgoing.push({ name: receivers[j].p.name, amount: amt });
+      receivers[j].p.incoming.push({ name: senders[i].p.name, amount: amt });
+    }
+    senders[i].r -= amt; receivers[j].r -= amt;
+    if (senders[i].r === 0) i++;
+    if (receivers[j].r === 0) j++;
+  }
+  return {
+    meetingName: state.meeting.name.trim(), date: state.meeting.date,
+    total: total, people: people, expenses: expenses, transfers: transfers
+  };
+}
+
+/* ---------- static i18n ---------- */
+function applyStatic() {
+  document.documentElement.lang = state.lang;
+  $$('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
+  $$('[data-i18n-ph]').forEach(function (el) { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
+  $$('[data-i18n-aria]').forEach(function (el) { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
+  $$('[data-i18n-title]').forEach(function (el) { el.setAttribute('title', t(el.getAttribute('data-i18n-title'))); });
+  $$('.logo').forEach(function (el) { el.setAttribute('aria-label', t('appName')); });
+  $$('.lang-btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === state.lang)); });
+  $('#start-eyebrow').hidden = state.lang === 'en';
+  document.title = t('appName') + (state.lang === 'en' ? '' : ' · My AI Treasures');
+}
+
+/* ---------- render ---------- */
+function render() {
+  applyStatic();
+  var s = state.screen;
+  $('#screen-start').hidden = s !== 'start';
+  $('#app').hidden = s === 'start';
+  $('#screen-input').hidden = s !== 'input';
+  $('#screen-result').hidden = s !== 'result';
+  if (s === 'start') {
+    $('#start-kept').hidden = !hasAnyInput();
+  } else if (s === 'input') {
+    $('#page-title').textContent = t('inputTitle');
+    renderInput();
+  } else if (s === 'result') {
+    $('#page-title').textContent = t('resultTitle');
+    renderResult();
+  }
+  updateNav();
+  if ($('#message-dialog').open && msgPerson) fillMessage();
+}
+
+function hasAnyInput() {
+  return !!(state.meeting.name.trim() ||
+    state.people.some(function (p) { return p.name.trim(); }) ||
+    state.expenses.some(function (e) { return e.desc.trim() || String(e.amount).trim(); }));
+}
+
+function updateNav() {
+  var nr = $('#nav-result');
+  nr.disabled = !state.hasResult;
+  nr.title = state.hasResult ? '' : t('navResultDisabled');
+  $('#nav-input').setAttribute('aria-current', state.screen === 'input' ? 'page' : 'false');
+  nr.setAttribute('aria-current', state.screen === 'result' ? 'page' : 'false');
+}
+
+function renderInput() {
+  var nm = $('#meeting-name'), dt = $('#meeting-date');
+  if (nm.value !== state.meeting.name) nm.value = state.meeting.name;
+  if (dt.value !== state.meeting.date) dt.value = state.meeting.date;
+  $('#currency-krw').checked = state.currency === 'KRW';
+  $('#currency-jpy').checked = state.currency === 'JPY';
+  renderPeople();
+  renderExpenses();
+  updateSummary();
+  updateStale();
+  refreshErrors();
+}
+
+function renderPeople() {
+  $('#people-list').innerHTML = state.people.map(function (p, i) {
+    return '<div class="person-row" data-id="' + p.id + '">' +
+      '<label class="field-label" for="person-' + p.id + '">' + esc(t('personN', { n: i + 1 })) + '</label>' +
+      '<div class="person-input-wrap">' +
+      '<input type="text" id="person-' + p.id + '" class="person-name" data-id="' + p.id + '" value="' + esc(p.name) + '" placeholder="' + esc(t('personPh')) + '" autocomplete="off" aria-describedby="err-person-' + p.id + '">' +
+      '<button type="button" class="btn btn-ghost btn-small person-del" data-id="' + p.id + '" aria-label="' + esc(t('deletePersonAria', { name: personLabel(p, i) })) + '" title="' + esc(t('deletePersonAria', { name: personLabel(p, i) })) + '">' + esc(t('delete')) + '</button>' +
+      '</div><div class="field-error" id="err-person-' + p.id + '"></div></div>';
+  }).join('');
+}
+
+function payerOptionsHTML(e) {
+  return '<option value="">' + esc(t('payerSelect')) + '</option>' + state.people.map(function (p, i) {
+    return '<option value="' + p.id + '"' + (e.payer === p.id ? ' selected' : '') + '>' + esc(personLabel(p, i)) + '</option>';
+  }).join('');
+}
+function shareListHTML(e) {
+  if (!state.people.length) return '<p class="hint">' + esc(t('noPeople')) + '</p>';
+  return state.people.map(function (p, i) {
+    var cid = 'exp-' + e.id + '-share-' + p.id;
+    return '<label class="share-chip" for="' + cid + '"><input type="checkbox" class="share-cb" id="' + cid + '" data-exp="' + e.id + '" value="' + p.id + '"' + (e.shares.indexOf(p.id) >= 0 ? ' checked' : '') + '><span>' + esc(personLabel(p, i)) + '</span></label>';
+  }).join('');
+}
+function taxMenuHTML(e) {
+  return TAX_KEYS.map(function (k) {
+    return '<button type="button" class="tax-item" role="menuitemradio" data-exp="' + e.id + '" data-tax="' + k + '" aria-checked="' + (e.tax === k) + '" tabindex="-1">' +
+      '<span>' + esc(t('tax_' + k)) + '</span>' + (k === 'incl' ? '<small>' + esc(t('taxDefault')) + '</small>' : '') + '</button>';
+  }).join('');
+}
+function expenseHTML(e, i) {
+  var pre = 'exp-' + e.id + '-';
+  var cnt = validShares(e).length;
+  return '<div class="expense-card" id="expense-' + e.id + '" data-id="' + e.id + '">' +
+    '<div class="expense-head"><h3>' + esc(t('expenseN', { n: i + 1 })) + '</h3>' +
+    '<button type="button" class="btn btn-ghost btn-small btn-danger exp-del" data-id="' + e.id + '" aria-label="' + esc(t('deleteExpenseAria', { name: expenseLabel(e, i) })) + '" title="' + esc(t('deleteExpense')) + '">' + esc(t('deleteExpense')) + '</button></div>' +
+    '<div class="expense-grid">' +
+    '<div class="field"><label for="' + pre + 'desc">' + esc(t('desc')) + '</label>' +
+    '<input type="text" id="' + pre + 'desc" class="exp-desc" data-exp="' + e.id + '" value="' + esc(e.desc) + '" placeholder="' + esc(t('descPh')) + '" autocomplete="off" aria-describedby="err-' + pre + 'desc">' +
+    '<div class="field-error" id="err-' + pre + 'desc"></div></div>' +
+    '<div class="field"><label for="' + pre + 'amount">' + esc(t('amount', { unit: unit() })) + '</label>' +
+    '<div class="amount-wrap">' +
+    '<input type="text" inputmode="numeric" id="' + pre + 'amount" class="exp-amount" data-exp="' + e.id + '" value="' + esc(e.amount) + '" placeholder="' + esc(t('amountPh')) + '" autocomplete="off" aria-describedby="err-' + pre + 'amount ' + pre + 'calc">' +
+    '<button type="button" class="tax-btn" id="' + pre + 'tax" data-exp="' + e.id + '" aria-haspopup="menu" aria-expanded="false" aria-controls="' + pre + 'taxmenu" aria-label="' + esc(t('taxBtnAria', { label: t('tax_' + e.tax) })) + '" title="' + esc(t('taxMenuAria')) + '">' + esc(t('tax_' + e.tax)) + ' ▾</button>' +
+    '<div class="tax-menu" id="' + pre + 'taxmenu" role="menu" aria-label="' + esc(t('taxMenuAria')) + '" hidden>' + taxMenuHTML(e) + '</div>' +
+    '</div>' +
+    '<div class="field-error" id="err-' + pre + 'amount"></div>' +
+    '<div class="exp-calc" id="' + pre + 'calc" aria-live="polite">' + calcLineHTML(e) + '</div></div>' +
+    '<div class="field span-2"><label for="' + pre + 'payer">' + esc(t('payer')) + '</label>' +
+    '<select id="' + pre + 'payer" class="exp-payer" data-exp="' + e.id + '" aria-describedby="err-' + pre + 'payer">' + payerOptionsHTML(e) + '</select>' +
+    '<p class="hint">' + esc(t('payerNote')) + '</p>' +
+    '<div class="field-error" id="err-' + pre + 'payer"></div></div>' +
+    '<div class="field span-2"><fieldset class="shares" id="' + pre + 'shares"><legend>' + esc(t('shares')) + '</legend>' +
+    '<div class="share-tools">' +
+    '<button type="button" class="btn btn-small share-all" data-exp="' + e.id + '">' + esc(t('selectAll')) + '</button>' +
+    '<button type="button" class="btn btn-small btn-ghost share-none" data-exp="' + e.id + '">' + esc(t('clearAll')) + '</button>' +
+    '<span class="share-count" id="' + pre + 'count">' + esc(t('selectedCount', { n: cnt })) + '</span></div>' +
+    '<div class="share-list" id="' + pre + 'sharelist">' + shareListHTML(e) + '</div></fieldset>' +
+    '<div class="field-error" id="err-' + pre + 'shares" role="alert"></div></div>' +
+    '</div></div>';
+}
+function calcLineHTML(e) {
+  var a = parseAmount(e.amount);
+  var pre = 'exp-' + e.id + '-';
+  var add = a.ok ? money(taxOf(a.value, e.tax)) : '—';
+  var fin = a.ok ? money(a.value + taxOf(a.value, e.tax)) : '—';
+  return esc(t('addTax')) + ' <b id="' + pre + 'addtax">' + esc(add) + '</b> · ' + esc(t('finalAmount')) + ' <b id="' + pre + 'final">' + esc(fin) + '</b>';
+}
+function renderExpenses() {
+  $('#expense-list').innerHTML = state.expenses.map(expenseHTML).join('');
+}
+function updateNameDisplays() {
+  state.expenses.forEach(function (e) {
+    var sel = document.getElementById('exp-' + e.id + '-payer');
+    if (sel) sel.innerHTML = payerOptionsHTML(e);
+    var list = document.getElementById('exp-' + e.id + '-sharelist');
+    if (list) list.innerHTML = shareListHTML(e);
+  });
+  state.people.forEach(function (p, i) {
+    var b = $('.person-del[data-id="' + p.id + '"]');
+    if (b) { var l = t('deletePersonAria', { name: personLabel(p, i) }); b.setAttribute('aria-label', l); b.title = l; }
+  });
+}
+function updateRowCalc(e) {
+  var el = document.getElementById('exp-' + e.id + '-calc');
+  if (el) el.innerHTML = calcLineHTML(e);
+}
+function updateShareCount(e) {
+  var el = document.getElementById('exp-' + e.id + '-count');
+  if (el) el.textContent = t('selectedCount', { n: validShares(e).length });
+}
+function updateSummary() {
+  var total = 0;
+  state.expenses.forEach(function (e) {
+    var a = parseAmount(e.amount);
+    if (a.ok) total += a.value + taxOf(a.value, e.tax);
+  });
+  $('#sum-people').textContent = t('peopleUnit', { n: state.people.length });
+  $('#sum-expenses').textContent = String(state.expenses.length);
+  $('#sum-total').textContent = money(total);
+}
+function updateStale() { $('#stale-notice').hidden = !state.stale; }
+
+function refreshErrors() {
+  var errs = validate();
+  $$('#screen-input .field-error').forEach(function (el) { el.textContent = ''; });
+  $$('#screen-input [aria-invalid]').forEach(function (el) { el.removeAttribute('aria-invalid'); });
+  var shown = state.showErrors ? errs : errs.filter(function (e) { return e.key === 'e_shares_empty'; });
+  shown.forEach(function (e) {
+    var el = document.getElementById(e.errEl);
+    if (el) el.textContent = (el.textContent ? el.textContent + ' ' : '') + t(e.key);
+    var f = e.field.indexOf('shares:') === 0 ? null : document.getElementById(e.field);
+    if (f && /^(INPUT|SELECT)$/.test(f.tagName)) f.setAttribute('aria-invalid', 'true');
+  });
+  var box = $('#error-summary');
+  if (state.showErrors && errs.length) {
+    box.innerHTML = '<h2>' + esc(t('errSummaryTitle')) + '</h2><ul>' + errs.map(function (e) {
+      return '<li><a href="#" data-focus="' + esc(e.field) + '">' + esc(e.loc) + '</a>: ' + esc(t(e.key)) + '</li>';
+    }).join('') + '</ul>';
+    box.hidden = false;
+  } else {
+    box.hidden = true; box.innerHTML = '';
+  }
+  return errs;
+}
+function focusField(field) {
+  var el;
+  if (field.indexOf('shares:') === 0) {
+    var id = field.slice(7);
+    el = $('#exp-' + id + '-shares input') || $('#exp-' + id + '-shares button');
+  } else el = document.getElementById(field);
+  if (el) { el.focus(); if (el.scrollIntoView) el.scrollIntoView({ block: 'center' }); }
+}
+
+/* ---------- result ---------- */
+function renderResult() {
+  if (!result) { state.screen = 'input'; render(); return; }
+  var r = result;
+  $('#result-heading').textContent = r.meetingName;
+  $('#result-date').textContent = r.date;
+  $('#result-currency').textContent = t(state.currency);
+  $('#h-r-expenses').textContent = '1. ' + t('sec_expenses');
+  $('#h-r-summary').textContent = '2. ' + t('sec_summary');
+  $('#h-r-people').textContent = '3. ' + t('sec_people');
+  $('#h-r-personal').textContent = '4. ' + t('sec_personal');
+  $('#h-r-transfers').textContent = '5. ' + t('sec_transfers');
+
+  $('#result-expenses').innerHTML = r.expenses.map(function (e, i) {
+    return '<article class="result-expense" data-expense-id="' + e.id + '"><h3>' + (i + 1) + '. ' + esc(e.desc) + '</h3><dl class="kv">' +
+      kv(t('payer'), e.payerName) + kv(t('inputAmount'), money(e.amount)) + kv(t('taxChoice'), t('tax_' + e.tax)) +
+      kv(t('addTax'), money(e.add)) + kv(t('finalAmount'), money(e.final)) +
+      kv(t('shares'), e.shareNames.join(', ') + ' (' + t('peopleUnit', { n: e.n }) + ')') +
+      kv(t('baseShare'), money(e.base)) + kv(t('remainderLabel'), remainderText(e)) +
+      '</dl></article>';
+  }).join('');
+
+  $('#result-total').textContent = money(r.total);
+  $('#result-people-count').textContent = t('peopleUnit', { n: r.people.length });
+  $('#result-rules').innerHTML = r.expenses.map(function (e) {
+    return '<li>' + esc(t('ruleLine', { desc: e.desc, final: money(e.final), n: t('peopleUnit', { n: e.n }), base: money(e.base), rem: remainderText(e) })) + '</li>';
+  }).join('');
+
+  $('#people-tbody').innerHTML = r.people.map(function (p) {
+    return '<tr data-person-id="' + p.id + '">' +
+      '<td data-label="' + esc(t('name')) + '">' + esc(p.name) + '</td>' +
+      '<td data-label="' + esc(t('paid')) + '" class="paid-cell">' + esc(money(p.paid)) + '</td>' +
+      '<td data-label="' + esc(t('burden')) + '" class="burden-cell">' + esc(money(p.burden)) + '</td>' +
+      '<td data-label="' + esc(t('send')) + '" class="' + (p.send ? 'send-cell' : '') + '">' + esc(money(p.send)) + '</td>' +
+      '<td data-label="' + esc(t('receive')) + '" class="' + (p.receive ? 'recv-cell' : '') + '">' + esc(money(p.receive)) + '</td>' +
+      '<td class="msg-cell"><button type="button" class="btn btn-small msg-btn" id="msg-' + p.id + '" data-person-id="' + p.id + '" aria-label="' + esc(t('messageAria', { name: honor(p.name) })) + '" title="' + esc(t('messageAria', { name: honor(p.name) })) + '">' + esc(t('message')) + '</button></td></tr>';
+  }).join('');
+
+  var sel = $('#person-select');
+  if (!r.people.some(function (p) { return p.id === state.selectedPerson; })) state.selectedPerson = r.people[0].id;
+  sel.innerHTML = r.people.map(function (p) {
+    return '<option value="' + p.id + '"' + (p.id === state.selectedPerson ? ' selected' : '') + '>' + esc(p.name) + '</option>';
+  }).join('');
+  renderGuide();
+
+  var tl = $('#transfer-list');
+  tl.innerHTML = r.transfers.map(function (x) {
+    return '<li class="transfer-item">' + esc(x.from + ' → ' + x.to + ': ' + money(x.amount)) + '</li>';
+  }).join('');
+  tl.hidden = !r.transfers.length;
+  $('#no-transfers').hidden = !!r.transfers.length;
+
+  if (copyFallbackShown) $('#copy-fallback').value = buildSettlementText();
+}
+function kv(k, v) { return '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>'; }
+function remainderText(e) {
+  return e.rem > 0 ? t('remainderDetail', { r: money(e.rem), names: e.remNames.join(', ') }) : t('remainderNone');
+}
+function renderGuide() {
+  var p = result.people.filter(function (x) { return x.id === state.selectedPerson; })[0];
+  var g = $('#person-guide');
+  if (!p) { g.innerHTML = ''; return; }
+  var h = '<h3 id="guide-title">' + esc(t('pg_title', { name: honor(p.name) })) + '</h3>';
+  if (p.send > 0) {
+    h += '<p>' + esc(t('pg_total')) + ': <span class="big" id="guide-send-total">' + esc(money(p.send)) + '</span></p><ul id="guide-list">' +
+      p.outgoing.map(function (o) { return '<li>' + esc(t('pg_to', { name: honor(o.name) }) + ': ' + money(o.amount)) + '</li>'; }).join('') + '</ul>';
+  } else if (p.receive > 0) {
+    h += '<p class="big" id="guide-send-total">' + esc(t('pg_noSend')) + '</p>' +
+      '<p>' + esc(t('pg_receive')) + ': <strong id="guide-receive-total">' + esc(money(p.receive)) + '</strong></p><ul id="guide-list">' +
+      p.incoming.map(function (o) { return '<li>' + esc(t('pg_from', { name: honor(o.name) }) + ': ' + money(o.amount)) + '</li>'; }).join('') + '</ul>';
+  } else {
+    h += '<p>' + esc(t('pg_total')) + ': <span class="big" id="guide-send-total">' + esc(money(0)) + '</span></p>' +
+      '<p>' + esc(t('pg_receive')) + ': <strong id="guide-receive-total">' + esc(money(0)) + '</strong></p>' +
+      '<p class="hint">' + esc(t('pg_even')) + '</p>';
+  }
+  g.innerHTML = h;
+}
+
+/* ---------- text builders ---------- */
+function buildSettlementText() {
+  var r = result, L = [];
+  L.push(t('txtHeader'));
+  L.push(t('txtMeeting') + ': ' + r.meetingName);
+  L.push(t('date') + ': ' + r.date);
+  L.push(t('currency') + ': ' + t(state.currency));
+  L.push(t('totalSpend') + ': ' + money(r.total) + ' / ' + t('peopleCount') + ': ' + t('peopleUnit', { n: r.people.length }));
+  L.push('');
+  L.push('■ ' + t('sec_expenses'));
+  r.expenses.forEach(function (e, i) {
+    L.push((i + 1) + '. ' + e.desc + ' — ' + t('payer') + ': ' + e.payerName);
+    L.push('   ' + t('inputAmount') + ' ' + money(e.amount) + ' / ' + t('taxChoice') + ' ' + t('tax_' + e.tax) +
+      ' / ' + t('addTax') + ' ' + money(e.add) + ' / ' + t('finalAmount') + ' ' + money(e.final));
+    L.push('   ' + t('shares') + ': ' + e.shareNames.join(', ') + ' (' + t('peopleUnit', { n: e.n }) + ') / ' +
+      t('baseShare') + ' ' + money(e.base) + ' / ' + remainderText(e));
+  });
+  L.push('');
+  L.push('■ ' + t('sec_people'));
+  r.people.forEach(function (p) {
+    L.push('- ' + p.name + ': ' + t('paid') + ' ' + money(p.paid) + ' / ' + t('burden') + ' ' + money(p.burden) +
+      ' / ' + t('send') + ' ' + money(p.send) + ' / ' + t('receive') + ' ' + money(p.receive));
+  });
+  L.push('');
+  L.push('■ ' + t('sec_transfers'));
+  if (r.transfers.length) r.transfers.forEach(function (x) { L.push('- ' + x.from + ' → ' + x.to + ': ' + money(x.amount)); });
+  else L.push(t('noTransfers'));
+  return L.join('\n');
+}
+function buildMessageText(pid) {
+  var p = result.people.filter(function (x) { return x.id === pid; })[0];
+  if (!p) return '';
+  var L = [t('msgTo', { name: honor(p.name) }), '', buildSettlementText(), ''];
+  L.push('■ ' + t('txtPersonal', { name: honor(p.name) }));
+  L.push(t('paid') + ': ' + money(p.paid));
+  L.push(t('burden') + ': ' + money(p.burden));
+  if (p.send > 0) {
+    L.push(t('send') + ': ' + money(p.send));
+    p.outgoing.forEach(function (o) { L.push('  → ' + o.name + ': ' + money(o.amount)); });
+  } else if (p.receive > 0) {
+    L.push(t('pg_noSend'));
+    L.push(t('receive') + ': ' + money(p.receive));
+    p.incoming.forEach(function (o) { L.push('  ← ' + o.name + ': ' + money(o.amount)); });
+  } else {
+    L.push(t('send') + ': ' + money(0) + ' / ' + t('receive') + ': ' + money(0));
+    L.push(t('msgNoExtra'));
+  }
+  return L.join('\n');
+}
+
+/* ---------- clipboard ---------- */
+function copyViaTextarea(ta) {
+  try {
+    ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length);
+    return document.execCommand('copy');
+  } catch (e) { return false; }
+}
+function copyText(text, fallbackTa) {
+  return new Promise(function (resolve) {
+    function legacy() {
+      var ta = fallbackTa, temp = false;
+      if (!ta) {
+        ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+        document.body.appendChild(ta); temp = true;
+      }
+      var ok = copyViaTextarea(ta);
+      if (temp) ta.remove();
+      resolve(ok);
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { resolve(true); }, legacy);
+        return;
+      }
+    } catch (e) { /* fall through */ }
+    legacy();
+  });
+}
+
+/* ---------- actions ---------- */
+function afterChange() {
+  if (state.hasResult) { state.hasResult = false; state.stale = true; result = null; }
+  updateStale();
+  updateSummary();
+  refreshErrors();
+  updateNav();
+  save();
+}
+function findExp(id) { return state.expenses.filter(function (e) { return e.id === id; })[0]; }
+function showPeopleMsg(text, isError) {
+  var m = $('#people-msg');
+  m.textContent = text;
+  m.className = 'notice ' + (isError ? 'notice-error' : 'notice-info');
+  m.setAttribute('role', isError ? 'alert' : 'status');
+  m.hidden = !text;
+}
+function setLang(l) {
+  if (!I18N[l]) return;
+  state.lang = l;
+  render();
+  save();
+}
+function goScreen(s) {
+  state.screen = s;
+  closeTaxMenus();
+  render();
+  save();
+  window.scrollTo(0, 0);
+}
+function goHome() {
+  closeTaxMenus();
+  if ($('#message-dialog').open) $('#message-dialog').close();
+  state.lang = 'ko';
+  state.hasResult = false; state.stale = false; state.showErrors = false;
+  result = null; copyFallbackShown = false;
+  $('#copy-fallback-wrap').hidden = true; $('#copy-status').textContent = '';
+  showPeopleMsg('');
+  goScreen('start');
+  $('#btn-start').focus();
+}
+function onCalc() {
+  closeTaxMenus();
+  state.showErrors = true;
+  var errs = refreshErrors();
+  if (errs.length) {
+    save();
+    var box = $('#error-summary');
+    box.focus();
+    if (box.scrollIntoView) box.scrollIntoView({ block: 'start' });
+    return;
+  }
+  result = compute();
+  state.hasResult = true; state.stale = false; state.showErrors = false;
+  copyFallbackShown = false;
+  $('#copy-fallback-wrap').hidden = true; $('#copy-status').textContent = '';
+  goScreen('result');
+  $('#result-heading').focus();
+}
+function resetAll() {
+  state = defaultState(state.lang, state.currency);
+  state.screen = 'input';
+  result = null; copyFallbackShown = false;
+  $('#copy-fallback-wrap').hidden = true; $('#copy-status').textContent = '';
+  showPeopleMsg('');
+  goScreen('input');
+  $('#meeting-name').focus();
+}
+
+/* tax menu */
+function closeTaxMenus(except) {
+  $$('.tax-menu').forEach(function (m) {
+    if (m === except) return;
+    if (!m.hidden) {
+      m.hidden = true;
+      var b = document.getElementById(m.id.replace(/taxmenu$/, 'tax'));
+      if (b) b.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+function openTaxMenu(expId) {
+  var menu = document.getElementById('exp-' + expId + '-taxmenu');
+  var btn = document.getElementById('exp-' + expId + '-tax');
+  closeTaxMenus(menu);
+  menu.hidden = false;
+  btn.setAttribute('aria-expanded', 'true');
+  var cur = $('.tax-item[aria-checked="true"]', menu) || $('.tax-item', menu);
+  cur.focus();
+}
+function chooseTax(expId, key) {
+  var e = findExp(expId);
+  if (!e) return;
+  e.tax = key;
+  var btn = document.getElementById('exp-' + expId + '-tax');
+  btn.textContent = t('tax_' + key) + ' ▾';
+  btn.setAttribute('aria-label', t('taxBtnAria', { label: t('tax_' + key) }));
+  $$('#exp-' + expId + '-taxmenu .tax-item').forEach(function (it) { it.setAttribute('aria-checked', String(it.getAttribute('data-tax') === key)); });
+  closeTaxMenus();
+  btn.focus();
+  updateRowCalc(e);
+  afterChange();
+}
+
+/* message dialog */
+function fillMessage() {
+  if (!result) return;
+  var p = result.people.filter(function (x) { return x.id === msgPerson; })[0];
+  if (!p) return;
+  $('#message-title').textContent = t('msgTitle', { name: honor(p.name) });
+  $('#message-text').value = buildMessageText(msgPerson);
+}
+var lastOpener = null;
+function openMessage(pid, opener) {
+  msgPerson = pid; lastOpener = opener || null;
+  fillMessage();
+  $('#message-status').textContent = ''; $('#message-status').className = 'status';
+  var d = $('#message-dialog');
+  if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+  $('#message-copy').focus();
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', function (ev) {
+  var tgt = ev.target;
+  var langBtn = tgt.closest('.lang-btn');
+  if (langBtn) { setLang(langBtn.getAttribute('data-lang')); return; }
+  if (!tgt.closest('.amount-wrap')) closeTaxMenus();
+});
+
+$('#btn-start').addEventListener('click', function () {
+  goScreen('input');
+  $('#meeting-name').focus();
+});
+$('#btn-home').addEventListener('click', goHome);
+$('#nav-input').addEventListener('click', function () { goScreen('input'); });
+$('#nav-result').addEventListener('click', function () { if (state.hasResult && result) goScreen('result'); });
+$('#nav-new').addEventListener('click', function () {
+  closeTaxMenus();
+  var d = $('#confirm-dialog');
+  if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+  $('#confirm-cancel').focus();
+});
+$('#confirm-cancel').addEventListener('click', function () { $('#confirm-dialog').close(); $('#nav-new').focus(); });
+$('#confirm-ok').addEventListener('click', function () { $('#confirm-dialog').close(); resetAll(); });
+
+var inputScreen = $('#screen-input');
+inputScreen.addEventListener('input', function (ev) {
+  var el = ev.target;
+  if (el.id === 'meeting-name') state.meeting.name = el.value;
+  else if (el.id === 'meeting-date') state.meeting.date = el.value;
+  else if (el.classList.contains('person-name')) {
+    var p = state.people.filter(function (x) { return x.id === el.getAttribute('data-id'); })[0];
+    if (!p) return;
+    p.name = el.value;
+    updateNameDisplays();
+  } else if (el.classList.contains('exp-desc')) {
+    findExp(el.getAttribute('data-exp')).desc = el.value;
+  } else if (el.classList.contains('exp-amount')) {
+    var e = findExp(el.getAttribute('data-exp'));
+    e.amount = el.value;
+    updateRowCalc(e);
+  } else return;
+  afterChange();
+});
+inputScreen.addEventListener('change', function (ev) {
+  var el = ev.target;
+  if (el.name === 'currency') {
+    state.currency = el.value;
+    afterChange();
+    renderExpenses();
+    refreshErrors();
+    updateSummary();
+    return;
+  }
+  if (el.id === 'meeting-date') { state.meeting.date = el.value; afterChange(); return; }
+  if (el.classList.contains('exp-payer')) {
+    findExp(el.getAttribute('data-exp')).payer = el.value;
+    afterChange();
+    return;
+  }
+  if (el.classList.contains('share-cb')) {
+    var e = findExp(el.getAttribute('data-exp'));
+    var set = validShares(e);
+    if (el.checked && set.indexOf(el.value) < 0) set.push(el.value);
+    if (!el.checked) set = set.filter(function (id) { return id !== el.value; });
+    var order = personIds();
+    e.shares = order.filter(function (id) { return set.indexOf(id) >= 0; });
+    updateShareCount(e);
+    afterChange();
+  }
+});
+inputScreen.addEventListener('click', function (ev) {
+  var tgt = ev.target;
+  var a = tgt.closest('[data-focus]');
+  if (a) { ev.preventDefault(); focusField(a.getAttribute('data-focus')); return; }
+  if (tgt.closest('#btn-add-person')) {
+    var p = mkPerson(state);
+    state.people.push(p);
+    renderPeople();
+    updateNameDisplays();
+    showPeopleMsg(state.expenses.length ? t('newPersonNotice') : '');
+    afterChange();
+    document.getElementById('person-' + p.id).focus();
+    return;
+  }
+  var pd = tgt.closest('.person-del');
+  if (pd) {
+    var pid = pd.getAttribute('data-id');
+    var idx = state.people.findIndex(function (x) { return x.id === pid; });
+    var asPayer = state.expenses.findIndex(function (e) { return e.payer === pid; });
+    if (asPayer >= 0) {
+      showPeopleMsg(t('personIsPayer', { name: honor(personLabel(state.people[idx], idx)), desc: expenseLabel(state.expenses[asPayer], asPayer) }), true);
+      return;
+    }
+    state.people.splice(idx, 1);
+    state.expenses.forEach(function (e) { e.shares = e.shares.filter(function (id) { return id !== pid; }); });
+    showPeopleMsg('');
+    renderPeople(); renderExpenses();
+    afterChange();
+    var next = $$('.person-name')[Math.min(idx, state.people.length - 1)];
+    (next || $('#btn-add-person')).focus();
+    return;
+  }
+  if (tgt.closest('#btn-add-expense')) {
+    var e = mkExpense(state);
+    state.expenses.push(e);
+    renderExpenses();
+    afterChange();
+    document.getElementById('exp-' + e.id + '-desc').focus();
+    return;
+  }
+  var ed = tgt.closest('.exp-del');
+  if (ed) {
+    var eid = ed.getAttribute('data-id');
+    var ei = state.expenses.findIndex(function (x) { return x.id === eid; });
+    state.expenses.splice(ei, 1);
+    renderExpenses();
+    afterChange();
+    var nd = $$('.exp-desc')[Math.min(ei, state.expenses.length - 1)];
+    (nd || $('#btn-add-expense')).focus();
+    return;
+  }
+  var tb = tgt.closest('.tax-btn');
+  if (tb) {
+    var menu = document.getElementById(tb.id + 'menu');
+    if (menu.hidden) openTaxMenu(tb.getAttribute('data-exp')); else closeTaxMenus();
+    return;
+  }
+  var ti = tgt.closest('.tax-item');
+  if (ti) { chooseTax(ti.getAttribute('data-exp'), ti.getAttribute('data-tax')); return; }
+  var sa = tgt.closest('.share-all'), sn = tgt.closest('.share-none');
+  if (sa || sn) {
+    var ex = findExp((sa || sn).getAttribute('data-exp'));
+    ex.shares = sa ? personIds() : [];
+    document.getElementById('exp-' + ex.id + '-sharelist').innerHTML = shareListHTML(ex);
+    updateShareCount(ex);
+    afterChange();
+    return;
+  }
+  if (tgt.closest('#btn-calc')) { onCalc(); return; }
+});
+inputScreen.addEventListener('keydown', function (ev) {
+  var item = ev.target.closest && ev.target.closest('.tax-item');
+  var tb = ev.target.closest && ev.target.closest('.tax-btn');
+  if (tb && (ev.key === 'ArrowDown' || ev.key === 'ArrowUp')) {
+    ev.preventDefault(); openTaxMenu(tb.getAttribute('data-exp')); return;
+  }
+  if (!item) {
+    if (ev.key === 'Enter' && ev.target.matches('input[type=text], input[type=date]')) {
+      ev.preventDefault();
+    }
+    return;
+  }
+  var items = $$('.tax-item', item.parentNode);
+  var i = items.indexOf(item);
+  var expId = item.getAttribute('data-exp');
+  if (ev.key === 'ArrowDown') { ev.preventDefault(); items[(i + 1) % items.length].focus(); }
+  else if (ev.key === 'ArrowUp') { ev.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
+  else if (ev.key === 'Home') { ev.preventDefault(); items[0].focus(); }
+  else if (ev.key === 'End') { ev.preventDefault(); items[items.length - 1].focus(); }
+  else if (ev.key === 'Escape') { ev.preventDefault(); closeTaxMenus(); document.getElementById('exp-' + expId + '-tax').focus(); }
+  else if (ev.key === 'Tab') { closeTaxMenus(); }
+});
+
+/* result screen */
+$('#btn-edit').addEventListener('click', function () { goScreen('input'); $('#meeting-name').focus(); });
+$('#person-select').addEventListener('change', function (ev) {
+  state.selectedPerson = ev.target.value;
+  renderGuide();
+  save();
+});
+$('#people-tbody').addEventListener('click', function (ev) {
+  var b = ev.target.closest('.msg-btn');
+  if (b) openMessage(b.getAttribute('data-person-id'), b);
+});
+$('#btn-copy').addEventListener('click', function () {
+  if (!result) return;
+  var text = buildSettlementText();
+  var st = $('#copy-status');
+  copyText(text).then(function (ok) {
+    if (ok) {
+      st.textContent = t('copied'); st.className = 'status ok';
+      copyFallbackShown = false; $('#copy-fallback-wrap').hidden = true;
+    } else {
+      st.textContent = t('copyFail'); st.className = 'status err';
+      copyFallbackShown = true;
+      var ta = $('#copy-fallback');
+      ta.value = text;
+      $('#copy-fallback-wrap').hidden = false;
+      ta.focus(); ta.select();
+    }
+  });
+});
+
+/* message dialog events */
+$('#message-copy').addEventListener('click', function () {
+  var ta = $('#message-text'), st = $('#message-status');
+  copyText(ta.value, ta).then(function (ok) {
+    if (ok) { st.textContent = t('msgCopied'); st.className = 'status ok'; }
+    else { ta.focus(); ta.select(); st.textContent = t('msgCopyFail'); st.className = 'status err'; }
+  });
+});
+$('#message-select-all').addEventListener('click', function () {
+  var ta = $('#message-text');
+  ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length);
+  $('#message-status').textContent = t('msgSelected'); $('#message-status').className = 'status';
+});
+$('#message-close').addEventListener('click', function () { $('#message-dialog').close(); });
+$('#message-dialog').addEventListener('close', function () {
+  msgPerson = null;
+  if (lastOpener && document.body.contains(lastOpener)) lastOpener.focus();
+});
+
+window.addEventListener('pagehide', save);
+
+/* ---------- init ---------- */
+(function init() {
+  if (state.hasResult || state.screen === 'result') {
+    var errs = validate();
+    if (!errs.length && state.hasResult) {
+      result = compute();
+    } else {
+      state.hasResult = false; result = null;
+      if (state.screen === 'result') state.screen = 'input';
+    }
+  }
+  render();
+  save();
+})();
+
+})();
+</script>
+</body>
+</html>
