@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "\ub098\uc758 AI \ucd1d\ubb34 \u00b7 My AI Treasures",
+  "short_name": "\ub098\uc758 AI \ucd1d\ubb34",
+  "description": "\uc5ec\ub7ec \uc0ac\ub78c\uc774 \ub300\uc2e0 \uacb0\uc81c\ud55c \ubaa8\uc784 \ube44\uc6a9\uc744 \uacf5\uc815\ud558\uac8c \ub098\ub204\uace0 \uc1a1\uae08\uc744 \uc548\ub0b4\ud558\ub294 \uc815\uc0b0 \ub3c4\uc6b0\ubbf8",
+  "lang": "ko",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FBF6EC",
+  "theme_color": "#1F5F5B",
+  "categories": ["finance", "utilities", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

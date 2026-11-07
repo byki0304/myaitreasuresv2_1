@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>나의 AI 총무 · My AI Treasures</title>
+<meta name="description" content="여러 사람이 대신 결제한 모임 비용을 공정하게 나누고 송금을 안내하는 정산 도우미">
+<meta name="theme-color" content="#1F5F5B">
+<meta name="application-name" content="나의 AI 총무">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="나의 AI 총무">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.ico" sizes="any">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="icons/favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" sizes="180x180">
 <style>
 :root{
   --cream:#FBF6EC; --cream-2:#F3EBDA; --paper:#FFFDF8;
@@ -43,17 +56,64 @@ button,input,select,textarea{font:inherit;color:inherit}
 .start-top{padding:16px 20px}
 .start-top .logo{background:rgba(255,253,248,.85);padding:6px 12px 6px 8px;border-radius:999px}
 .start-main{flex:1;display:flex;align-items:center;justify-content:center;padding:12px 16px}
-.start-card{max-width:520px;width:100%;background:rgba(255,253,248,.93);border-radius:22px;padding:28px 24px;box-shadow:0 8px 30px rgba(20,63,60,.15);text-align:center}
-.start-eyebrow{margin:0;color:var(--teal);font-weight:700;letter-spacing:.06em;font-size:.85rem}
-.start-card h1{margin:6px 0 10px;font-size:2rem;color:var(--teal-d);line-height:1.2}
-.start-card p{margin:0 0 10px;color:var(--ink)}
-.start-sub{font-size:.92rem;color:var(--muted)!important}
-.start-kept{font-size:.9rem;background:var(--sage-l);color:var(--teal-d)!important;border-radius:10px;padding:6px 10px}
-#btn-start{margin-top:10px;min-width:180px;min-height:52px;font-size:1.1rem}
+.start-card{max-width:600px;width:100%;background:rgba(255,253,248,.94);border-radius:24px;padding:32px 28px 30px;box-shadow:0 10px 34px rgba(20,63,60,.16);text-align:center;display:flex;flex-direction:column;align-items:center}
+.start-eyebrow{display:inline-block;margin:0 0 4px;padding:3px 12px;border-radius:999px;background:var(--teal-l);color:var(--teal);font-weight:700;letter-spacing:.06em;font-size:.8rem}
+.start-card h1{margin:6px 0 0;font-size:2.1rem;color:var(--teal-d);line-height:1.2}
+.start-card h1::after{content:"";display:block;width:44px;height:4px;margin:12px auto 14px;border-radius:4px;background:var(--apricot)}
+.start-card p{margin:0;max-width:36em;color:var(--ink);font-size:1.02rem;line-height:1.65}
+#btn-start{margin-top:22px;min-width:200px;min-height:52px;font-size:1.1rem;box-shadow:0 6px 16px rgba(20,63,60,.22)}
 .start-bottom{padding:12px 16px 24px;display:flex;justify-content:center}
 .lang-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;background:rgba(255,253,248,.88);padding:6px;border-radius:999px;box-shadow:var(--shadow)}
 .lang-btn{min-height:40px;padding:6px 16px;border-radius:999px;border:1.5px solid var(--teal);background:var(--paper);color:var(--teal);font-weight:600;cursor:pointer}
 .lang-btn[aria-pressed="true"]{background:var(--teal);color:#fff}
+.lang-caption{display:none}
+.start-card{word-break:keep-all;overflow-wrap:anywhere}
+#screen-start{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+
+/* Start screen · mobile portrait: language picker becomes a 2-row card (caption + equal buttons) */
+@media (max-width:600px) and (orientation:portrait){
+  .start-top{padding:12px 16px}
+  .start-main{padding:8px 16px}
+  .start-card{padding:26px 20px 24px}
+  .start-card h1{font-size:1.8rem}
+  .start-card p{font-size:1rem;line-height:1.6}
+  #btn-start{margin-top:20px;width:100%;max-width:280px}
+  .start-bottom{padding:8px 16px 18px}
+  .lang-pills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;max-width:400px;gap:6px;padding:8px 8px 10px;border-radius:18px}
+  .lang-caption{display:flex;grid-column:1/-1;align-items:center;justify-content:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted)}
+  .lang-caption svg{width:16px;height:16px;flex:none}
+  .lang-pills .lang-btn{padding:6px 4px;min-height:44px;white-space:nowrap}
+}
+@media (max-width:600px) and (orientation:portrait) and (max-height:600px){
+  .start-card{padding:18px 14px}
+  .start-card h1{font-size:1.5rem;margin-top:2px}
+  .start-card h1::after{margin:8px auto 10px}
+  .start-card p{font-size:.94rem;line-height:1.5}
+  #btn-start{margin-top:14px;min-height:46px}
+}
+
+/* Start screen · short landscape (phones): language picker moves to the top bar, card gets compact */
+@media (orientation:landscape) and (max-height:560px){
+  .start-top{padding:10px 16px;padding-right:300px}
+  .start-bottom{position:absolute;top:10px;right:16px;padding:0;z-index:2}
+  .lang-pills{padding:4px;gap:6px}
+  .lang-pills .lang-btn{min-height:36px;padding:4px 12px;font-size:.9rem}
+  .start-main{padding:4px 16px 12px}
+  .start-card{max-width:640px;padding:16px 24px}
+  .start-eyebrow{font-size:.74rem;padding:2px 10px}
+  .start-card h1{font-size:1.5rem;margin-top:2px}
+  .start-card h1::after{width:36px;height:3px;margin:8px auto 10px}
+  .start-card p{font-size:.94rem;line-height:1.5}
+  #btn-start{margin-top:14px;min-height:44px;font-size:1rem}
+}
+@media (orientation:landscape) and (max-height:400px){
+  .start-top .logo-text{display:none}
+  .start-top .logo{padding:6px}
+  .start-top{padding-right:16px}
+  .start-card{padding:10px 20px}
+  .start-card h1{font-size:1.3rem}
+  .start-card p{font-size:.88rem}
+}
 
 /* App shell */
 .app{min-height:100vh}
@@ -111,6 +171,11 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* Cards and forms */
 .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin:0 0 16px;box-shadow:var(--shadow);min-width:0}
 .card h2{margin:0 0 12px;font-size:1.15rem;color:var(--teal-d)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.card-head h2{margin:0;min-width:0}
+.btn-new{border-color:var(--apricot);background:var(--apricot-l);color:var(--teal-d);min-height:40px;padding:4px 14px 4px 10px}
+.btn-new:hover{background:var(--apricot)}
+.btn-new svg{width:18px;height:18px;flex:none}
 .card h3{margin:0;font-size:1rem;color:var(--teal-d)}
 .field{margin:0 0 12px;min-width:0}
 .field label,.field-label{display:block;font-weight:600;margin:0 0 4px;font-size:.95rem}
@@ -311,13 +376,12 @@ dialog::backdrop{background:rgba(20,40,38,.5)}
       <p class="start-eyebrow" id="start-eyebrow">My AI Treasures</p>
       <h1 id="start-title" data-i18n="appName">나의 AI 총무</h1>
       <p id="start-tagline" data-i18n="startTagline"></p>
-      <p class="start-sub" data-i18n="startSub"></p>
-      <p class="start-kept" id="start-kept" data-i18n="startKept" hidden></p>
       <button type="button" class="btn btn-primary" id="btn-start" data-i18n="startBtn">시작하기</button>
     </div>
   </div>
   <div class="start-bottom">
     <div class="lang-pills" role="group" data-i18n-aria="langLabel" aria-label="언어">
+      <span class="lang-caption" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>Language · 언어 · 言語</span>
       <button type="button" class="lang-btn" id="lang-ko" data-lang="ko" lang="ko" aria-pressed="true">한국어</button>
       <button type="button" class="lang-btn" id="lang-en" data-lang="en" lang="en" aria-pressed="false">English</button>
       <button type="button" class="lang-btn" id="lang-ja" data-lang="ja" lang="ja" aria-pressed="false">日本語</button>
@@ -358,7 +422,10 @@ dialog::backdrop{background:rgba(20,40,38,.5)}
       <div class="notice notice-error" id="error-summary" tabindex="-1" role="alert" hidden></div>
 
       <section class="card" aria-labelledby="sec-meeting">
-        <h2 id="sec-meeting" data-i18n="secMeeting"></h2>
+        <div class="card-head">
+          <h2 id="sec-meeting" data-i18n="secMeeting"></h2>
+          <button type="button" class="btn btn-small btn-new" id="btn-new-inline" data-i18n-title="newSettleTip"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></svg><span data-i18n="newSettle">새 정산</span></button>
+        </div>
         <div class="grid-2">
           <div class="field">
             <label for="meeting-name" data-i18n="meetingName"></label>
@@ -376,6 +443,7 @@ dialog::backdrop{background:rgba(20,40,38,.5)}
           <span class="field-label" id="currency-label" data-i18n="currency"></span>
           <div class="radio-group" role="radiogroup" aria-labelledby="currency-label" aria-describedby="currency-note">
             <label class="radio-pill"><input type="radio" name="currency" id="currency-krw" value="KRW"><span data-i18n="KRW"></span></label>
+            <label class="radio-pill"><input type="radio" name="currency" id="currency-usd" value="USD"><span data-i18n="USD"></span></label>
             <label class="radio-pill"><input type="radio" name="currency" id="currency-jpy" value="JPY"><span data-i18n="JPY"></span></label>
           </div>
           <p class="hint" id="currency-note" data-i18n="currencyNote"></p>
@@ -514,6 +582,7 @@ dialog::backdrop{background:rgba(20,40,38,.5)}
 
 var STORAGE_KEY = 'myAiTreasures.session.v1';
 var MAX_AMOUNT = 1000000000;
+var CURRENCIES = ['KRW', 'USD', 'JPY'];
 var TAX_KEYS = ['incl', '10', '5', '1'];
 var TAX_RATE = { incl: 0, '10': 10, '5': 5, '1': 1 };
 
@@ -521,8 +590,6 @@ var I18N = {
   ko: {
     appName: '나의 AI 총무',
     startTagline: '여러 사람이 대신 결제한 모임 비용을 지출별 참여자끼리 공정하게 나누고, 누가 누구에게 얼마를 보내면 되는지 알려 드립니다.',
-    startSub: '로그인·서버 없이 이 페이지에서 바로 계산합니다.',
-    startKept: '이전에 입력한 내용이 그대로 유지되어 있습니다.',
     startBtn: '시작하기',
     langLabel: '언어',
     navAria: '메뉴',
@@ -543,6 +610,7 @@ var I18N = {
     meetingDate: '모임 날짜 (필수)',
     currency: '통화',
     KRW: '원화 (KRW)',
+    USD: '달러 (USD)',
     JPY: '엔화 (JPY)',
     currencyNote: '통화를 바꾸면 숫자의 단위만 바뀌며 금액은 환산되지 않습니다.',
     secPeople: '참여자',
@@ -562,7 +630,9 @@ var I18N = {
     amount: '금액 ({unit})',
     amountShort: '금액',
     amountPh: '예: 1000',
+    amountPh_USD: '예: 12.50',
     unitKRW: '원',
+    unitUSD: '달러',
     unitJPY: '엔',
     taxBtnAria: '세금 선택: {label}',
     taxMenuAria: '세금 선택',
@@ -611,7 +681,9 @@ var I18N = {
     e_amount_neg: '음수는 입력할 수 없습니다.',
     e_amount_zero: '0보다 큰 금액을 입력하세요.',
     e_amount_dec: '소수는 입력할 수 없습니다. 정수로 입력하세요.',
+    e_amount_dec_USD: '달러는 소수점 둘째 자리(센트)까지만 입력할 수 있습니다.',
     e_amount_range: '금액은 1~1,000,000,000 사이의 정수여야 합니다.',
+    e_amount_range_USD: '금액은 0.01~1,000,000,000 사이여야 합니다.',
     e_payer_empty: '결제자를 선택하세요.',
     e_shares_empty: '이 지출의 부담 참여자를 한 명 이상 선택하세요.',
     e_total_range: '총지출은 1,000,000,000 이하여야 합니다.',
@@ -626,12 +698,14 @@ var I18N = {
     baseShare: '기본 부담액',
     remainderLabel: '나머지 배분',
     remainderDetail: '나머지 {r} → {names} (1씩 추가)',
+    remainderDetail_USD: '나머지 {r} → {names} (0.01달러씩 추가)',
     remainderNone: '나머지 없음',
     totalSpend: '총지출',
     peopleCount: '참여 인원',
     peopleUnit: '{n}명',
     ruleTitle: '지출별 분담 규칙',
     ruleGeneral: '각 지출의 최종 금액을 그 지출의 부담 참여자끼리만 균등하게 나눕니다. 나누어떨어지지 않는 나머지는 등록 순서대로 앞사람부터 1씩 더 부담합니다. 전체 인원으로 일괄 나누지 않습니다.',
+    ruleGeneral_USD: '각 지출의 최종 금액을 그 지출의 부담 참여자끼리만 균등하게 나눕니다. 나누어떨어지지 않는 나머지는 등록 순서대로 앞사람부터 0.01달러(1센트)씩 더 부담합니다. 전체 인원으로 일괄 나누지 않습니다.',
     ruleLine: '{desc}: {final} ÷ {n} = 1인 {base}, {rem}',
     name: '이름',
     paid: '선결제액',
@@ -674,13 +748,12 @@ var I18N = {
     msgNoExtra: '추가 송금·수취 없음',
     honor: '{name}님',
     fmtKRW: '{n}원',
+    fmtUSD: '{n}달러',
     fmtJPY: '{n}엔'
   },
   en: {
     appName: 'My AI Treasures',
     startTagline: 'Split group costs that different people paid, fairly among the people who joined each expense, and see exactly who should send how much to whom.',
-    startSub: 'Calculated right here on this page — no login or server.',
-    startKept: 'Your previous inputs are still kept.',
     startBtn: 'Get started',
     langLabel: 'Language',
     navAria: 'Menu',
@@ -701,6 +774,7 @@ var I18N = {
     meetingDate: 'Meeting date (required)',
     currency: 'Currency',
     KRW: 'Korean won (KRW)',
+    USD: 'US dollar (USD)',
     JPY: 'Japanese yen (JPY)',
     currencyNote: 'Changing the currency only changes the unit; amounts are not converted.',
     secPeople: 'Participants',
@@ -720,7 +794,9 @@ var I18N = {
     amount: 'Amount ({unit})',
     amountShort: 'Amount',
     amountPh: 'e.g. 1000',
+    amountPh_USD: 'e.g. 12.50',
     unitKRW: 'won',
+    unitUSD: 'USD',
     unitJPY: 'yen',
     taxBtnAria: 'Tax option: {label}',
     taxMenuAria: 'Tax option',
@@ -769,7 +845,9 @@ var I18N = {
     e_amount_neg: 'Negative amounts are not allowed.',
     e_amount_zero: 'Enter an amount greater than 0.',
     e_amount_dec: 'Decimals are not allowed. Enter a whole number.',
+    e_amount_dec_USD: 'Dollar amounts can have at most two decimal places (cents).',
     e_amount_range: 'Amount must be a whole number from 1 to 1,000,000,000.',
+    e_amount_range_USD: 'Amount must be from 0.01 to 1,000,000,000.',
     e_payer_empty: 'Select a payer.',
     e_shares_empty: 'Select at least one person to share this expense.',
     e_total_range: 'Total spending must be 1,000,000,000 or less.',
@@ -784,12 +862,14 @@ var I18N = {
     baseShare: 'Base share',
     remainderLabel: 'Remainder',
     remainderDetail: 'Remainder {r} → {names} (+1 each)',
+    remainderDetail_USD: 'Remainder {r} → {names} (+$0.01 each)',
     remainderNone: 'No remainder',
     totalSpend: 'Total spending',
     peopleCount: 'Participants',
     peopleUnit: '{n} people',
     ruleTitle: 'Split rule per expense',
     ruleGeneral: 'Each expense\'s final amount is split equally only among the people sharing that expense. Any remainder is added 1 at a time to people in registration order. The total is never divided by all participants at once.',
+    ruleGeneral_USD: 'Each expense\'s final amount is split equally only among the people sharing that expense. Any remainder is added $0.01 (1 cent) at a time to people in registration order. The total is never divided by all participants at once.',
     ruleLine: '{desc}: {final} ÷ {n} = {base} each, {rem}',
     name: 'Name',
     paid: 'Paid upfront',
@@ -832,13 +912,12 @@ var I18N = {
     msgNoExtra: 'No additional transfer to send or receive',
     honor: '{name}',
     fmtKRW: '{n} won',
+    fmtUSD: '${n}',
     fmtJPY: '{n} yen'
   },
   ja: {
     appName: 'マイAI総務',
     startTagline: '複数の人が立て替えた集まりの費用を、支出ごとの参加者で公平に分け、誰が誰にいくら送金すればよいかをご案内します。',
-    startSub: 'ログインやサーバーなしで、このページですぐに計算します。',
-    startKept: '以前の入力内容はそのまま保持されています。',
     startBtn: 'はじめる',
     langLabel: '言語',
     navAria: 'メニュー',
@@ -859,6 +938,7 @@ var I18N = {
     meetingDate: '集まりの日付（必須）',
     currency: '通貨',
     KRW: '韓国ウォン (KRW)',
+    USD: '米ドル (USD)',
     JPY: '日本円 (JPY)',
     currencyNote: '通貨を変えても数字の単位が変わるだけで、金額は換算されません。',
     secPeople: '参加者',
@@ -878,7 +958,9 @@ var I18N = {
     amount: '金額（{unit}）',
     amountShort: '金額',
     amountPh: '例：1000',
+    amountPh_USD: '例：12.50',
     unitKRW: 'ウォン',
+    unitUSD: 'ドル',
     unitJPY: '円',
     taxBtnAria: '税の選択：{label}',
     taxMenuAria: '税の選択',
@@ -927,7 +1009,9 @@ var I18N = {
     e_amount_neg: 'マイナスの金額は入力できません。',
     e_amount_zero: '0より大きい金額を入力してください。',
     e_amount_dec: '小数は入力できません。整数で入力してください。',
+    e_amount_dec_USD: 'ドルは小数点以下2桁（セント）まで入力できます。',
     e_amount_range: '金額は1〜1,000,000,000の整数で入力してください。',
+    e_amount_range_USD: '金額は0.01〜1,000,000,000の範囲で入力してください。',
     e_payer_empty: '支払者を選択してください。',
     e_shares_empty: 'この支出の負担者を1人以上選択してください。',
     e_total_range: '支出の合計は1,000,000,000以下にしてください。',
@@ -942,12 +1026,14 @@ var I18N = {
     baseShare: '基本負担額',
     remainderLabel: '端数の配分',
     remainderDetail: '端数 {r} → {names}（1ずつ追加）',
+    remainderDetail_USD: '端数 {r} → {names}（0.01ドルずつ追加）',
     remainderNone: '端数なし',
     totalSpend: '支出合計',
     peopleCount: '参加人数',
     peopleUnit: '{n}人',
     ruleTitle: '支出ごとの分担ルール',
     ruleGeneral: '各支出の最終金額を、その支出の負担者だけで均等に分けます。割り切れない端数は登録順に前の人から1ずつ多く負担します。全員で一括して割ることはしません。',
+    ruleGeneral_USD: '各支出の最終金額を、その支出の負担者だけで均等に分けます。割り切れない端数は登録順に前の人から0.01ドル（1セント）ずつ多く負担します。全員で一括して割ることはしません。',
     ruleLine: '{desc}：{final} ÷ {n} = 1人 {base}、{rem}',
     name: '名前',
     paid: '立替額',
@@ -990,6 +1076,7 @@ var I18N = {
     msgNoExtra: '追加の送金・受け取りなし',
     honor: '{name}さん',
     fmtKRW: '{n}ウォン',
+    fmtUSD: '{n}ドル',
     fmtJPY: '{n}円'
   }
 };
@@ -1009,14 +1096,23 @@ function num(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
 function t(key, p) {
   var dict = I18N[state.lang] || I18N.ko;
-  var s = dict[key];
+  var ck = key + '_' + state.currency;
+  var s = dict[ck] != null ? dict[ck] : I18N.ko[ck];
+  if (s == null) s = dict[key];
   if (s == null) s = I18N.ko[key];
   if (s == null) return key;
   if (p) s = s.replace(/\{(\w+)\}/g, function (m, k) { return p[k] != null ? p[k] : m; });
   return s;
 }
-function money(n) { return t(state.currency === 'JPY' ? 'fmtJPY' : 'fmtKRW', { n: num(n) }); }
-function unit() { return t(state.currency === 'JPY' ? 'unitJPY' : 'unitKRW'); }
+/* USD amounts are stored and computed as integer cents; KRW/JPY as whole units. */
+function minorPerUnit() { return state.currency === 'USD' ? 100 : 1; }
+function money(n) {
+  var s = state.currency === 'USD'
+    ? num(Math.floor(n / 100)) + '.' + (n % 100 < 10 ? '0' : '') + (n % 100)
+    : num(n);
+  return t('fmt' + state.currency, { n: s });
+}
+function unit() { return t('unit' + state.currency); }
 function honor(name) { return t('honor', { name: name }); }
 
 /* ---------- state ---------- */
@@ -1050,7 +1146,7 @@ function load() {
     var s = JSON.parse(raw);
     if (!s || !Array.isArray(s.people) || !Array.isArray(s.expenses) || !s.meeting) return null;
     if (!I18N[s.lang]) s.lang = 'ko';
-    if (s.currency !== 'KRW' && s.currency !== 'JPY') s.currency = 'KRW';
+    if (CURRENCIES.indexOf(s.currency) < 0) s.currency = 'KRW';
     if (['start', 'input', 'result'].indexOf(s.screen) < 0) s.screen = 'start';
     s.meeting.name = String(s.meeting.name || '');
     s.meeting.date = String(s.meeting.date || '');
@@ -1084,11 +1180,19 @@ function parseAmount(raw) {
   if (s === '') return { ok: false, err: 'empty' };
   s = s.replace(/,/g, '');
   if (/^-\s*\d+(\.\d+)?$/.test(s)) return { ok: false, err: Number(s.replace(/\s/g, '')) === 0 ? 'zero' : 'neg' };
-  if (/^\d*\.\d+$/.test(s) || /^\d+\.$/.test(s)) return { ok: false, err: 'dec' };
-  if (!/^\d+$/.test(s)) return { ok: false, err: 'nan' };
-  var v = Number(s);
+  var v;
+  if (state.currency === 'USD') {
+    var m = /^(\d*)\.?(\d*)$/.exec(s);
+    if (!m || (m[1] === '' && m[2] === '')) return { ok: false, err: 'nan' };
+    if (m[2].length > 2) return { ok: false, err: 'dec' };
+    v = Number(m[1] || '0') * 100 + Number((m[2] + '00').slice(0, 2));
+  } else {
+    if (/^\d*\.\d+$/.test(s) || /^\d+\.$/.test(s)) return { ok: false, err: 'dec' };
+    if (!/^\d+$/.test(s)) return { ok: false, err: 'nan' };
+    v = Number(s);
+  }
   if (v === 0) return { ok: false, err: 'zero' };
-  if (v > MAX_AMOUNT) return { ok: false, err: 'range' };
+  if (v > MAX_AMOUNT * minorPerUnit()) return { ok: false, err: 'range' };
   return { ok: true, value: v };
 }
 function taxOf(amount, taxKey) {
@@ -1149,7 +1253,7 @@ function validate() {
     if (!e.payer || ids.indexOf(e.payer) < 0) add(pre + 'payer', 'err-' + pre + 'payer', base + t('payer'), 'e_payer_empty');
     if (validShares(e).length === 0) add('shares:' + e.id, 'err-' + pre + 'shares', base + t('shares'), 'e_shares_empty');
   });
-  if (total > MAX_AMOUNT) add(firstAmount || 'btn-calc', 'err-total', t('locSummary') + ' · ' + t('sumTotal'), 'e_total_range');
+  if (total > MAX_AMOUNT * minorPerUnit()) add(firstAmount || 'btn-calc', 'err-total', t('locSummary') + ' · ' + t('sumTotal'), 'e_total_range');
   return errs;
 }
 
@@ -1223,9 +1327,7 @@ function render() {
   $('#app').hidden = s === 'start';
   $('#screen-input').hidden = s !== 'input';
   $('#screen-result').hidden = s !== 'result';
-  if (s === 'start') {
-    $('#start-kept').hidden = !hasAnyInput();
-  } else if (s === 'input') {
+  if (s === 'input') {
     $('#page-title').textContent = t('inputTitle');
     renderInput();
   } else if (s === 'result') {
@@ -1234,12 +1336,6 @@ function render() {
   }
   updateNav();
   if ($('#message-dialog').open && msgPerson) fillMessage();
-}
-
-function hasAnyInput() {
-  return !!(state.meeting.name.trim() ||
-    state.people.some(function (p) { return p.name.trim(); }) ||
-    state.expenses.some(function (e) { return e.desc.trim() || String(e.amount).trim(); }));
 }
 
 function updateNav() {
@@ -1255,6 +1351,7 @@ function renderInput() {
   if (nm.value !== state.meeting.name) nm.value = state.meeting.name;
   if (dt.value !== state.meeting.date) dt.value = state.meeting.date;
   $('#currency-krw').checked = state.currency === 'KRW';
+  $('#currency-usd').checked = state.currency === 'USD';
   $('#currency-jpy').checked = state.currency === 'JPY';
   renderPeople();
   renderExpenses();
@@ -1304,7 +1401,7 @@ function expenseHTML(e, i) {
     '<div class="field-error" id="err-' + pre + 'desc"></div></div>' +
     '<div class="field"><label for="' + pre + 'amount">' + esc(t('amount', { unit: unit() })) + '</label>' +
     '<div class="amount-wrap">' +
-    '<input type="text" inputmode="numeric" id="' + pre + 'amount" class="exp-amount" data-exp="' + e.id + '" value="' + esc(e.amount) + '" placeholder="' + esc(t('amountPh')) + '" autocomplete="off" aria-describedby="err-' + pre + 'amount ' + pre + 'calc">' +
+    '<input type="text" inputmode="' + (state.currency === 'USD' ? 'decimal' : 'numeric') + '" id="' + pre + 'amount" class="exp-amount" data-exp="' + e.id + '" value="' + esc(e.amount) + '" placeholder="' + esc(t('amountPh')) + '" autocomplete="off" aria-describedby="err-' + pre + 'amount ' + pre + 'calc">' +
     '<button type="button" class="tax-btn" id="' + pre + 'tax" data-exp="' + e.id + '" aria-haspopup="menu" aria-expanded="false" aria-controls="' + pre + 'taxmenu" aria-label="' + esc(t('taxBtnAria', { label: t('tax_' + e.tax) })) + '" title="' + esc(t('taxMenuAria')) + '">' + esc(t('tax_' + e.tax)) + ' ▾</button>' +
     '<div class="tax-menu" id="' + pre + 'taxmenu" role="menu" aria-label="' + esc(t('taxMenuAria')) + '" hidden>' + taxMenuHTML(e) + '</div>' +
     '</div>' +
@@ -1691,13 +1788,17 @@ $('#btn-start').addEventListener('click', function () {
 $('#btn-home').addEventListener('click', goHome);
 $('#nav-input').addEventListener('click', function () { goScreen('input'); });
 $('#nav-result').addEventListener('click', function () { if (state.hasResult && result) goScreen('result'); });
-$('#nav-new').addEventListener('click', function () {
+var newSettleTrigger = null;
+function openNewSettle(ev) {
+  newSettleTrigger = ev.currentTarget;
   closeTaxMenus();
   var d = $('#confirm-dialog');
   if (d.showModal) d.showModal(); else d.setAttribute('open', '');
   $('#confirm-cancel').focus();
-});
-$('#confirm-cancel').addEventListener('click', function () { $('#confirm-dialog').close(); $('#nav-new').focus(); });
+}
+$('#nav-new').addEventListener('click', openNewSettle);
+$('#btn-new-inline').addEventListener('click', openNewSettle);
+$('#confirm-cancel').addEventListener('click', function () { $('#confirm-dialog').close(); (newSettleTrigger || $('#nav-new')).focus(); });
 $('#confirm-ok').addEventListener('click', function () { $('#confirm-dialog').close(); resetAll(); });
 
 var inputScreen = $('#screen-input');
@@ -1904,6 +2005,13 @@ window.addEventListener('pagehide', save);
   render();
   save();
 })();
+
+/* Service workers need http(s); opening the file directly (file://) still works without one. */
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
 
 })();
 </script>
